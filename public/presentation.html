@@ -119,7 +119,7 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* Slide Content Typography */
+    /* Typography & Hierarchy */
     .slide-tag {
       font-size: 0.75rem;
       color: #f87171;
@@ -189,6 +189,36 @@
       font-weight: 700;
     }
 
+    /* Comparison Table */
+    .lit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+    .lit-table th {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 10px 12px;
+      text-align: left;
+      border: 1px solid #334155;
+      font-weight: 700;
+    }
+    .lit-table td {
+      padding: 9px 12px;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+    }
+    .lit-table tr:nth-child(even) td {
+      background: rgba(30, 41, 59, 0.5);
+    }
+    .lit-table tr.highlight-row td {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
     /* Keyboard navigation hint */
     .nav-hint {
       font-size: 0.75rem;
@@ -196,7 +226,7 @@
       margin-right: 6px;
     }
 
-    /* Print styles for export */
+    /* Print styles */
     @media print {
       .pres-nav, .no-print { display: none !important; }
       body { background: #fff !important; color: #000 !important; }
@@ -219,7 +249,7 @@
     <div class="pres-controls">
       <span class="nav-hint">⌨️ ⬅️ ➡️ Keys</span>
       <button class="btn btn-outline" onclick="prevSlide()">&#8592; Prev</button>
-      <span id="slide-num" style="font-weight:700;font-size:0.85rem;min-width:65px;text-align:center;color:var(--accent-blue);">1 / 12</span>
+      <span id="slide-num" style="font-weight:700;font-size:0.85rem;min-width:65px;text-align:center;color:var(--accent-blue);">1 / 14</span>
       <button class="btn btn-outline" onclick="nextSlide()">Next &#8594;</button>
       <button class="btn btn-red" onclick="window.print()">🖨️ Save PDF</button>
       <a href="Blood_Donation_Management_System_Presentation.pptx" download class="btn btn-outline" style="border-color:#38bdf8;color:#38bdf8;">📥 Download .PPTX</a>
@@ -230,7 +260,7 @@
   <!-- Main Slides View -->
   <main class="deck-container">
 
-    <!-- ================= SLIDE 1: COVER & ALL FRONT PAGE DETAILS ================= -->
+    <!-- ================= SLIDE 1: COVER & ALL DETAILS ================= -->
     <section class="slide active" id="slide-1">
       <div>
         <!-- Top Meta Header -->
@@ -249,7 +279,7 @@
               BLOOD DONATION<br><span style="color:#ef4444;">MANAGEMENT SYSTEM</span>
             </h1>
             <p style="font-size:1rem;color:var(--text-muted);line-height:1.4;">
-              Centralized Healthcare Information Infrastructure, Real-Time Inventory Control &amp; Automated ABO/Rh Donor Matching
+              Centralized Healthcare Information Infrastructure, Real-Time Inventory Control &amp; Automated ABO/Rh Matching
             </p>
             <div style="margin-top:12px;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 14px;">
               <strong style="color:#ffffff;font-size:0.95rem;">Maharaja Agrasen Institute of Technology (MAIT)</strong>
@@ -313,26 +343,148 @@
 
       <div class="slide-footer">
         <span>Maharaja Agrasen Institute of Technology (MAIT)</span>
-        <span>Slide 1 of 12 &bull; Minor Project 2026</span>
+        <span>Slide 1 of 14 &bull; Minor Project 2026</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 2: PROBLEM STATEMENT & LATENCY BENCHMARK ================= -->
+    <!-- ================= SLIDE 2: PRESENTATION OUTLINE / DESIRED SECTIONS ================= -->
     <section class="slide" id="slide-2">
       <div>
-        <div class="slide-tag">Section 1 &bull; Clinical Motivation &amp; Data Benchmark</div>
-        <h2 class="slide-heading">Problem Statement: Emergency Response Latency</h2>
+        <div class="slide-tag">Academic Agenda &bull; Presentation Outline</div>
+        <h2 class="slide-heading">Presentation Structure &amp; Evaluation Framework</h2>
+
+        <div class="grid-2" style="gap:16px;">
+          <div class="card-box" style="border-left:4px solid #ef4444;background:#1e293b;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="badge-pill" style="background:#ef4444;color:#fff;">01</span>
+              <strong style="font-size:1.1rem;color:#fff;">Objectives of the Project</strong>
+            </div>
+            <p style="font-size:0.85rem;color:#cbd5e1;">Core engineering goals, centralized inventory tracking, ABO/Rh compatibility rules, and emergency response pipeline.</p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #38bdf8;background:#1e293b;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="badge-pill" style="background:#38bdf8;color:#000;">02</span>
+              <strong style="font-size:1.1rem;color:#fff;">Motivation and Problem Statement</strong>
+            </div>
+            <p style="font-size:0.85rem;color:#cbd5e1;">Perishable nature of blood (35 days), information black holes, and quantitative latency benchmark data.</p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #4ade80;background:#1e293b;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="badge-pill" style="background:#4ade80;color:#000;">03</span>
+              <strong style="font-size:1.1rem;color:#fff;">Literature Survey related to proposed work</strong>
+            </div>
+            <p style="font-size:0.85rem;color:#cbd5e1;">Comprehensive comparative matrix reviewing e-RaktKosh, Red Cross app, manual registries, and scientific research gaps.</p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #f59e0b;background:#1e293b;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="badge-pill" style="background:#f59e0b;color:#000;">04</span>
+              <strong style="font-size:1.1rem;color:#fff;">Research Methodology / Proposed Methodology</strong>
+            </div>
+            <p style="font-size:0.85rem;color:#cbd5e1;">Multi-tier architecture, mathematical matching formula, 3D city logistics grid, and transfusion science matrix.</p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #c084fc;background:#1e293b;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="badge-pill" style="background:#c084fc;color:#000;">05</span>
+              <strong style="font-size:1.1rem;color:#fff;">Expected Outcomes (if applicable)</strong>
+            </div>
+            <p style="font-size:0.85rem;color:#cbd5e1;">Data-driven live stock charts, request breakdown doughnut chart, monthly trends, digital pass, and admin dashboard.</p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #2dd4bf;background:#1e293b;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="badge-pill" style="background:#2dd4bf;color:#000;">06</span>
+              <strong style="font-size:1.1rem;color:#fff;">References</strong>
+            </div>
+            <p style="font-size:0.85rem;color:#cbd5e1;">Standard IEEE academic citations, WHO transfusion guidelines, and National Blood Transfusion Council regulations.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Evaluation Framework &bull; MAIT Department of ITE</span>
+        <span>Slide 2 of 14</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 3: 1. OBJECTIVES OF THE PROJECT ================= -->
+    <section class="slide" id="slide-3">
+      <div>
+        <div class="slide-tag">Section 1 &bull; Core Engineering Goals</div>
+        <h2 class="slide-heading">1. Objectives of the Project</h2>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card-box" style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="background:#ef4444;color:#fff;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">1</div>
+              <div>
+                <strong style="color:#ffffff;font-size:1rem;">Centralized Health Informatics Web Platform</strong>
+                <p style="font-size:0.825rem;color:#94a3b8;margin-top:2px;">Establish a secure, normalized web platform interlinking voluntary donors, medical institutions, and blood banks into one digital ecosystem.</p>
+              </div>
+            </div>
+            <span class="badge-pill" style="background:#1e3a8a;color:#93c5fd;white-space:nowrap;">100% Digital Shift</span>
+          </div>
+
+          <div class="card-box" style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="background:#38bdf8;color:#000;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">2</div>
+              <div>
+                <strong style="color:#ffffff;font-size:1rem;">Real-Time Inventory Auditing for All 8 Blood Groups</strong>
+                <p style="font-size:0.825rem;color:#94a3b8;margin-top:2px;">Track units available across A+, A-, B+, B-, AB+, AB-, O+, and O- with automated Safe, Low, and Critical threshold alerts.</p>
+              </div>
+            </div>
+            <span class="badge-pill" style="background:#065f46;color:#6ee7b7;white-space:nowrap;">Zero Phantom Stock</span>
+          </div>
+
+          <div class="card-box" style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="background:#4ade80;color:#000;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">3</div>
+              <div>
+                <strong style="color:#ffffff;font-size:1rem;">Smart Algorithmic ABO/Rh &amp; Spatial Proximity Matching</strong>
+                <p style="font-size:0.825rem;color:#94a3b8;margin-top:2px;">Automate donor-recipient matching by evaluating clinical red cell compatibility combined with geographical proximity scoring.</p>
+              </div>
+            </div>
+            <span class="badge-pill" style="background:#78350f;color:#fde68a;white-space:nowrap;">Multi-Factor Scoring</span>
+          </div>
+
+          <div class="card-box" style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="background:#f59e0b;color:#000;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">4</div>
+              <div>
+                <strong style="color:#ffffff;font-size:1rem;">24x7 Emergency Requisition Triage &amp; Live Tracking</strong>
+                <p style="font-size:0.825rem;color:#94a3b8;margin-top:2px;">Provide rapid triage for acute trauma, cardiac surgeries, and maternal emergencies with transparent 4-stage live milestone progress tracking.</p>
+              </div>
+            </div>
+            <span class="badge-pill" style="background:#831843;color:#fbcfe8;white-space:nowrap;">&lt; 10 Min Response</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Department of ITE &bull; MAIT</span>
+        <span>Slide 3 of 14</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 4: 2. MOTIVATION & PROBLEM STATEMENT (CHART) ================= -->
+    <section class="slide" id="slide-4">
+      <div>
+        <div class="slide-tag">Section 2 &bull; Clinical Motivation &amp; Data Benchmark</div>
+        <h2 class="slide-heading">2. Motivation and Problem Statement</h2>
 
         <div class="grid-2">
           <!-- Problem context -->
           <div class="card-box" style="display:flex;flex-direction:column;justify-content:space-between;">
             <div>
-              <h4 style="color:#ef4444;margin-bottom:8px;font-size:1.05rem;">The Healthcare Bottleneck</h4>
+              <h4 style="color:#ef4444;margin-bottom:8px;font-size:1.05rem;">The Healthcare Crisis &amp; Bottleneck</h4>
               <p style="font-size:0.875rem;color:#cbd5e1;line-height:1.5;margin-bottom:12px;">
-                Whole blood has a strict shelf-life of <strong>35-42 days</strong> with <strong>zero synthetic substitutes</strong>. Over 85% of blood banks maintain siloed, paper-based records.
+                Whole blood has a strict shelf-life of <strong>35-42 days</strong> with <strong>zero synthetic substitutes</strong>. Over 85% of regional blood banks maintain siloed, paper-based records.
               </p>
               <div style="background:#0f172a;border-left:3px solid #ef4444;padding:10px 14px;border-radius:4px;margin-bottom:12px;">
-                <div style="font-size:0.825rem;color:#fca5a5;font-weight:700;">Traditional Manual Delay: 3 to 5 Hours</div>
+                <div style="font-size:0.825rem;color:#fca5a5;font-weight:700;">Traditional Manual Delay: 3 to 5 Hours (270 mins)</div>
                 <div style="font-size:0.78rem;color:#94a3b8;margin-top:2px;">Relatives make frantic phone calls during trauma, cardiac surgeries, and maternal hemorrhages.</div>
               </div>
               <div style="background:#064e3b;border-left:3px solid #10b981;padding:10px 14px;border-radius:4px;">
@@ -341,13 +493,13 @@
               </div>
             </div>
             <div style="margin-top:14px;font-size:0.78rem;color:#64748b;">
-              Source: Academic Proposal Audit &amp; Healthcare Supply Chain Benchmarking.
+              Source: Academic Minor Project Investigation &amp; Healthcare Supply Chain Benchmarks.
             </div>
           </div>
 
           <!-- Clustered Bar Chart -->
           <div class="card-box">
-            <h4 style="color:#38bdf8;margin-bottom:6px;font-size:1rem;">Latency Comparison (Minutes)</h4>
+            <h4 style="color:#38bdf8;margin-bottom:6px;font-size:1rem;">Response Latency Benchmark (Minutes)</h4>
             <div class="chart-container">
               <canvas id="latencyChart"></canvas>
             </div>
@@ -356,42 +508,87 @@
       </div>
 
       <div class="slide-footer">
-        <span>Blood Donation Management System</span>
-        <span>Slide 2 of 12</span>
+        <span>Motivation &amp; Problem Statement &bull; Clinical Latency</span>
+        <span>Slide 4 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 3: DATA-DRIVEN STOCK INVENTORY ================= -->
-    <section class="slide" id="slide-3">
+    <!-- ================= SLIDE 5: 3. LITERATURE SURVEY ================= -->
+    <section class="slide" id="slide-5">
       <div>
-        <div class="slide-tag">Section 2 &bull; Central Blood Bank Telemetry</div>
-        <h2 class="slide-heading">Live Blood Inventory Distribution (8 Blood Groups)</h2>
+        <div class="slide-tag">Section 3 &bull; Comparative Analysis &amp; Scientific Review</div>
+        <h2 class="slide-heading">3. Literature Survey related to the Proposed Work</h2>
 
-        <div style="background:#1e3a8a22;border:1px solid #3b82f644;border-radius:8px;padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:0.875rem;color:#bfdbfe;">
-            Real-time audit across all 8 standard ABO and Rh(D) blood groups with automated Safe, Low, and Critical threshold monitoring.
-          </span>
-          <span class="badge-pill" style="background:#1e40af;color:#fff;">LIVE STOCK AUDIT</span>
-        </div>
+        <!-- Comparative Table -->
+        <table class="lit-table">
+          <thead>
+            <tr>
+              <th>System / Literature Reference</th>
+              <th>Core Architecture</th>
+              <th>Live Stock Telemetry</th>
+              <th>Matching Engine</th>
+              <th>Emergency Latency</th>
+              <th>Identified Limitations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>e-RaktKosh (National Portal)</strong></td>
+              <td>Centralized Web Portal</td>
+              <td style="color:#f87171;">Delayed batch sync</td>
+              <td>Exact blood group only</td>
+              <td style="color:#f87171;">2 &ndash; 4 Hours</td>
+              <td>No universal donor alternatives; stale data issues.</td>
+            </tr>
+            <tr>
+              <td><strong>Red Cross Mobile App</strong></td>
+              <td>Donor Rewards Native App</td>
+              <td>Regional only</td>
+              <td>Manual selection</td>
+              <td>1 &ndash; 3 Hours</td>
+              <td>Lacks automated hospital triage &amp; open REST APIs.</td>
+            </tr>
+            <tr>
+              <td><strong>Traditional Paper Registries</strong></td>
+              <td>Physical Registers</td>
+              <td style="color:#f87171;">None (Manual count)</td>
+              <td style="color:#f87171;">None (Memory based)</td>
+              <td style="color:#f87171;">3 &ndash; 5 Hours</td>
+              <td>Prone to ledger loss, zero remote audit, high human errors.</td>
+            </tr>
+            <tr class="highlight-row">
+              <td><strong>Proposed System (RaktDaan)</strong></td>
+              <td>Node.js REST API + 3NF DB</td>
+              <td style="color:#4ade80;">Dynamic Real-Time Sync</td>
+              <td style="color:#4ade80;">Clinical ABO/Rh + Proximity</td>
+              <td style="color:#4ade80;">&lt; 10 Minutes</td>
+              <td>Fully automated full-stack pipeline with digital passes.</td>
+            </tr>
+          </tbody>
+        </table>
 
-        <div class="card-box">
-          <div class="chart-container" style="height:360px;">
-            <canvas id="inventoryChart"></canvas>
-          </div>
+        <!-- Key Gaps Addressed -->
+        <div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px 16px;margin-top:16px;">
+          <strong style="color:#38bdf8;font-size:0.9rem;">Key Research Gaps Addressed by This Project:</strong>
+          <ul style="list-style:none;font-size:0.8rem;color:#cbd5e1;display:flex;flex-direction:column;gap:4px;margin-top:6px;">
+            <li>&bull; <strong>Transfusion Science Integration:</strong> Automatically leverages universal donor units (O-) during critical blood shortages.</li>
+            <li>&bull; <strong>Multi-Criteria Distance Scoring:</strong> Ranks donors via normalized mathematical formulation: <code>Score = 50 + W_blood + W_location</code>.</li>
+            <li>&bull; <strong>Dual-Persistence Fault Tolerance:</strong> Seamlessly switches between MySQL and local persistent storage to guarantee zero downtime.</li>
+          </ul>
         </div>
       </div>
 
       <div class="slide-footer">
-        <span>Central Blood Bank &bull; Live Telemetry Engine</span>
-        <span>Slide 3 of 12</span>
+        <span>Literature Survey &bull; State of the Art Comparison</span>
+        <span>Slide 5 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 4: SMART CITY LOGISTICS & ARCHITECTURE ================= -->
-    <section class="slide" id="slide-4">
+    <!-- ================= SLIDE 6: 4. RESEARCH METHODOLOGY (IMAGE) ================= -->
+    <section class="slide" id="slide-6">
       <div>
-        <div class="slide-tag">Section 3 &bull; Engineering Architecture &amp; Logistics</div>
-        <h2 class="slide-heading">Smart City Healthcare Logistics &amp; System Architecture</h2>
+        <div class="slide-tag">Section 4 &bull; Engineering Methodology</div>
+        <h2 class="slide-heading">4. Research Methodology / Proposed Methodology</h2>
 
         <div class="grid-2" style="align-items:center;">
           <!-- 3D City Logistics Image -->
@@ -399,39 +596,39 @@
             <img src="images/network_grid.jpg" alt="Smart City Blood Logistics Grid">
           </div>
 
-          <!-- 4 Tier Architecture -->
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div class="card-box" style="border-left:4px solid #38bdf8;padding:12px 16px;">
-              <strong style="color:#38bdf8;font-size:0.95rem;">1. CLIENT LAYER (FRONTEND)</strong>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">HTML5 Semantic Views • CSS3 Modern Healthcare Palette • Vanilla ES6+ JS • Chart.js Real-Time Dashboards • Zero bloated bundle overhead.</p>
+          <!-- 4 Methodology Phases -->
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="card-box" style="border-left:4px solid #38bdf8;padding:10px 14px;">
+              <strong style="color:#38bdf8;font-size:0.9rem;">PHASE 1: DATA MODELING &amp; 3NF SCHEMA</strong>
+              <p style="font-size:0.78rem;color:#cbd5e1;margin-top:2px;">Normalized schema decoupling inventory, donors, blood_requests, and donations with strict integrity constraints.</p>
             </div>
-            <div class="card-box" style="border-left:4px solid #ef4444;padding:12px 16px;">
-              <strong style="color:#ef4444;font-size:0.95rem;">2. REST API &amp; MICROSERVICES</strong>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Node.js &amp; Express.js Engine • Asynchronous Non-Blocking Event Loop • Endpoints: /api/inventory, /api/donors, /api/requests, /api/matching, /api/live-sync.</p>
+            <div class="card-box" style="border-left:4px solid #ef4444;padding:10px 14px;">
+              <strong style="color:#ef4444;font-size:0.9rem;">PHASE 2: CLINICAL COMPATIBILITY &amp; PROXIMITY SCORING</strong>
+              <p style="font-size:0.78rem;color:#cbd5e1;margin-top:2px;">Formulated scoring equation combining antigen compatibility (+30 exact, +15 alternate) and spatial distance (+20 city).</p>
             </div>
-            <div class="card-box" style="border-left:4px solid #4ade80;padding:12px 16px;">
-              <strong style="color:#4ade80;font-size:0.95rem;">3. SMART MATCHING ENGINE</strong>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Clinical ABO/Rh Transfusion Matrix • Multi-Factor Scoring: Base (50) + Exact Group (+30) + City Proximity (+20) • Dynamic donor ranking.</p>
+            <div class="card-box" style="border-left:4px solid #4ade80;padding:10px 14px;">
+              <strong style="color:#4ade80;font-size:0.9rem;">PHASE 3: ASYNCHRONOUS REST MICROSERVICES</strong>
+              <p style="font-size:0.78rem;color:#cbd5e1;margin-top:2px;">Event-driven Node.js/Express backend endpoints for /api/inventory, /api/donors, /api/requests, and dynamic live-sync simulation.</p>
             </div>
-            <div class="card-box" style="border-left:4px solid #fbbf24;padding:12px 16px;">
-              <strong style="color:#fbbf24;font-size:0.95rem;">4. DUAL PERSISTENCE LAYER</strong>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Production 3NF MySQL Relational Database (database.sql) + Zero-Config Persistent Local Storage Fallback for reliable viva defense.</p>
+            <div class="card-box" style="border-left:4px solid #fbbf24;padding:10px 14px;">
+              <strong style="color:#fbbf24;font-size:0.9rem;">PHASE 4: LIVE TELEMETRY &amp; MEMORY VERIFICATION</strong>
+              <p style="font-size:0.78rem;color:#cbd5e1;margin-top:2px;">Automated test suite (9 passing tests), persistent memory sync, and containerized Docker deployment.</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="slide-footer">
-        <span>Full-Stack Architecture &bull; Node.js &amp; Express</span>
-        <span>Slide 4 of 12</span>
+        <span>Research Methodology &bull; Full-Stack Pipeline</span>
+        <span>Slide 6 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 5: CLINICAL ABO/RH MATRIX & FORMULATION ================= -->
-    <section class="slide" id="slide-5">
+    <!-- ================= SLIDE 7: 4. METHODOLOGY: TRANSFUSION SCIENCE & ALGORITHM ================= -->
+    <section class="slide" id="slide-7">
       <div>
         <div class="slide-tag">Section 4 &bull; Clinical Science &amp; Algorithm</div>
-        <h2 class="slide-heading">Clinical ABO/Rh Compatibility Engine &amp; Formulation</h2>
+        <h2 class="slide-heading">4. Proposed Methodology: Transfusion Science &amp; Algorithm</h2>
 
         <div class="grid-2">
           <!-- Transfusion Rules -->
@@ -447,8 +644,8 @@
                 Possesses both A and B antigens and Rh factor; can safely receive red cells from all 8 blood groups.
               </div>
               <div style="background:#0f172a;padding:10px;border-radius:6px;">
-                <strong style="color:#fbbf24;">O+ (High Demand Group):</strong><br>
-                Can donate to all Rh-positive groups (O+, A+, B+, AB+), covering over 85% of clinical patients in India.
+                <strong style="color:#fbbf24;">O+ (High Demand Category):</strong><br>
+                Can donate to all Rh-positive groups (O+, A+, B+, AB+), covering over 85% of clinical admissions in India.
               </div>
               <div style="background:#0f172a;padding:10px;border-radius:6px;">
                 <strong style="color:#4ade80;">Rh-D Factor Safety Gate:</strong><br>
@@ -474,7 +671,7 @@
               </li>
               <li><strong>3. Clinical Eligibility Gate:</strong><br>
                 &bull; <code>is_available == TRUE</code> and <code>status == "Active"</code><br>
-                &bull; Age in range [18, 65] years &bull; Donation interval &ge; 90 days
+                &bull; Age in range [18, 65] years &bull; Last donation &ge; 90 days
               </li>
             </ul>
           </div>
@@ -483,15 +680,73 @@
 
       <div class="slide-footer">
         <span>Clinical Compatibility &bull; services/matchingService.js</span>
-        <span>Slide 5 of 12</span>
+        <span>Slide 7 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 6: REQUISITIONS WORKFLOW & DOUGHNUT CHART ================= -->
-    <section class="slide" id="slide-6">
+    <!-- ================= SLIDE 8: 4. METHODOLOGY: MULTI-TIER ARCHITECTURE ================= -->
+    <section class="slide" id="slide-8">
       <div>
-        <div class="slide-tag">Section 5 &bull; Clinical Requisition Telemetry</div>
-        <h2 class="slide-heading">Requisition Workflow &amp; Fulfillment Breakdown</h2>
+        <div class="slide-tag">Section 4 &bull; System Architecture</div>
+        <h2 class="slide-heading">4. Proposed Methodology: Multi-Tier Architecture</h2>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="card-box" style="border-left:4px solid #38bdf8;padding:12px 16px;">
+            <strong style="color:#38bdf8;font-size:0.95rem;">TIER 1: PRESENTATION LAYER (FRONTEND)</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">HTML5 Semantic Markup • CSS3 Modern Healthcare Palette • Vanilla ES6+ JavaScript • Chart.js Interactive Dashboards • Zero bloated bundle overhead for 100% mobile responsiveness.</p>
+          </div>
+          <div class="card-box" style="border-left:4px solid #ef4444;padding:12px 16px;">
+            <strong style="color:#ef4444;font-size:0.95rem;">TIER 2: APPLICATION LAYER (REST MICROSERVICES)</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Node.js &amp; Express.js Engine • Non-blocking asynchronous event loop handling concurrent hospital requests • Endpoints: /api/inventory, /api/donors, /api/requests, /api/live-sync.</p>
+          </div>
+          <div class="card-box" style="border-left:4px solid #4ade80;padding:12px 16px;">
+            <strong style="color:#4ade80;font-size:0.95rem;">TIER 3: ALGORITHMIC MATCHING LAYER</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">ABO/Rh Transfusion Matrix Engine • Multi-factor scoring function: Base (50) + Exact Group (+30) + Proximity (+20) • Dynamic ranking in services/matchingService.js.</p>
+          </div>
+          <div class="card-box" style="border-left:4px solid #fbbf24;padding:12px 16px;">
+            <strong style="color:#fbbf24;font-size:0.95rem;">TIER 4: DUAL PERSISTENCE LAYER</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Production 3NF MySQL Database (database.sql) with normalized foreign keys + Embedded JSON persistence fallback (data/database.json) for 100% viva defense reliability.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Full-Stack Architecture &bull; Node.js &amp; Express</span>
+        <span>Slide 8 of 14</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 9: 5. EXPECTED OUTCOMES: LIVE INVENTORY (CHART) ================= -->
+    <section class="slide" id="slide-9">
+      <div>
+        <div class="slide-tag">Section 5 &bull; Central Blood Bank Telemetry</div>
+        <h2 class="slide-heading">5. Expected Outcomes: Live Inventory Distribution</h2>
+
+        <div style="background:#1e3a8a22;border:1px solid #3b82f644;border-radius:8px;padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:0.875rem;color:#bfdbfe;">
+            Real-time audit across all 8 standard ABO and Rh(D) blood groups with automated Safe, Low, and Critical threshold monitoring.
+          </span>
+          <span class="badge-pill" style="background:#1e40af;color:#fff;">LIVE STOCK AUDIT</span>
+        </div>
+
+        <div class="card-box">
+          <div class="chart-container" style="height:360px;">
+            <canvas id="inventoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Expected Outcomes &bull; Live Telemetry Engine</span>
+        <span>Slide 9 of 14</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 10: 5. EXPECTED OUTCOMES: REQUISITIONS & TRENDS (CHARTS) ================= -->
+    <section class="slide" id="slide-10">
+      <div>
+        <div class="slide-tag">Section 5 &bull; Requisition &amp; Donation Telemetry</div>
+        <h2 class="slide-heading">5. Expected Outcomes: Requisitions &amp; Donation Trends</h2>
 
         <div class="grid-2">
           <!-- Doughnut Chart -->
@@ -502,67 +757,27 @@
             </div>
           </div>
 
-          <!-- 4-Step Process Timeline -->
+          <!-- Monthly Line Chart -->
           <div class="card-box">
-            <h4 style="color:#ef4444;margin-bottom:12px;font-size:1rem;">4-Step Live Milestone Tracking</h4>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <div style="background:#0f172a;border-left:3px solid #38bdf8;padding:8px 12px;border-radius:4px;">
-                <strong style="color:#fff;font-size:0.85rem;">Step 1: Intake &amp; Triage</strong>
-                <p style="font-size:0.78rem;color:#94a3b8;">Patient or hospital submits requisition with units needed and emergency priority flag.</p>
-              </div>
-              <div style="background:#0f172a;border-left:3px solid #f59e0b;padding:8px 12px;border-radius:4px;">
-                <strong style="color:#fff;font-size:0.85rem;">Step 2: Medical Verification</strong>
-                <p style="font-size:0.78rem;color:#94a3b8;">Admin or hospital coordinator verifies clinical diagnosis and prescription.</p>
-              </div>
-              <div style="background:#0f172a;border-left:3px solid #8b5cf6;padding:8px 12px;border-radius:4px;">
-                <strong style="color:#fff;font-size:0.85rem;">Step 3: Dispatch / Donor Match</strong>
-                <p style="font-size:0.78rem;color:#94a3b8;">Auto-dispense from inventory or algorithmic matching with nearby voluntary donors.</p>
-              </div>
-              <div style="background:#0f172a;border-left:3px solid #10b981;padding:8px 12px;border-radius:4px;">
-                <strong style="color:#fff;font-size:0.85rem;">Step 4: Transfusion Fulfilled</strong>
-                <p style="font-size:0.78rem;color:#94a3b8;">Units received at medical center; inventory stock updated and transaction audited.</p>
-              </div>
+            <h4 style="color:#ef4444;margin-bottom:8px;font-size:1rem;">Monthly Camp Collections vs Demand</h4>
+            <div class="chart-container">
+              <canvas id="trendsChart"></canvas>
             </div>
           </div>
         </div>
       </div>
 
       <div class="slide-footer">
-        <span>Requisition Workflow &bull; Real-Time Milestone Tracking</span>
-        <span>Slide 6 of 12</span>
+        <span>Expected Outcomes &bull; Data-Driven Visualizations</span>
+        <span>Slide 10 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 7: MONTHLY TRENDS (LINE CHART) ================= -->
-    <section class="slide" id="slide-7">
+    <!-- ================= SLIDE 11: 5. EXPECTED OUTCOMES: DONOR PASS & ADMIN CONTROL (IMAGE) ================= -->
+    <section class="slide" id="slide-11">
       <div>
-        <div class="slide-tag">Section 6 &bull; Donation Drive Analysis</div>
-        <h2 class="slide-heading">Monthly Voluntary Donation Drives &amp; Requisition Trends</h2>
-
-        <div style="background:#1e3a8a22;border:1px solid #3b82f644;border-radius:8px;padding:10px 16px;margin-bottom:16px;">
-          <span style="font-size:0.85rem;color:#bfdbfe;">
-            Historical 6-month longitudinal analysis tracking voluntary donation camp collections versus hospital emergency requisitions across the municipal network.
-          </span>
-        </div>
-
-        <div class="card-box">
-          <div class="chart-container" style="height:360px;">
-            <canvas id="trendsChart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div class="slide-footer">
-        <span>Donation Trends &bull; Longitudinal Growth Analysis</span>
-        <span>Slide 7 of 12</span>
-      </div>
-    </section>
-
-    <!-- ================= SLIDE 8: DIGITAL DONOR PASS & MOBILE APP ================= -->
-    <section class="slide" id="slide-8">
-      <div>
-        <div class="slide-tag">Section 7 &bull; Patient &amp; Donor Engagement</div>
-        <h2 class="slide-heading">Digital Donor Pass &amp; Smart Mobile Engagement</h2>
+        <div class="slide-tag">Section 5 &bull; Operational Capabilities</div>
+        <h2 class="slide-heading">5. Expected Outcomes: Digital Donor Pass &amp; Admin Control</h2>
 
         <div class="grid-2" style="align-items:center;">
           <!-- Mobile Pass Image -->
@@ -577,85 +792,32 @@
               <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Instant verifiable electronic pass generated with official unique identifier and dynamic verification badge.</p>
             </div>
             <div class="card-box" style="border-left:4px solid #38bdf8;">
-              <strong style="color:#38bdf8;font-size:0.95rem;">Pre-Screening Medical Checklist</strong>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Evaluates age (18-65), body weight (>50kg), hemoglobin level, and last donation interval (>= 90 days).</p>
+              <strong style="color:#38bdf8;font-size:0.95rem;">Chief Medical Administrator: Dr. Anshuman Jaglan</strong>
+              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Executive dashboard with live inventory steppers, one-click blood dispense, and session security.</p>
             </div>
             <div class="card-box" style="border-left:4px solid #4ade80;">
-              <strong style="color:#4ade80;font-size:0.95rem;">Scannable QR Verification</strong>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Allows hospital intake coordinators to scan donor credential at emergency triage for instant identity audit.</p>
+              <strong style="color:#4ade80;font-size:0.95rem;">Dynamic Telemetry Simulation &amp; Memory</strong>
+              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Clicking "Refresh Live Data" executes simulation syncing realistic hospital activity while permanently preserving manual edits in memory!</p>
             </div>
             <div class="card-box" style="border-left:4px solid #f59e0b;">
-              <strong style="color:#f59e0b;font-size:0.95rem;">Donation History &amp; Life-Saving Impact</strong>
-              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Displays total units contributed, previous donation dates, and next eligibility date.</p>
+              <strong style="color:#f59e0b;font-size:0.95rem;">Instant CSV Audit Reports</strong>
+              <p style="font-size:0.8rem;color:#cbd5e1;margin-top:2px;">Export complete donor rosters and inventory balance sheets for external examination and university audit.</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="slide-footer">
-        <span>Donor Card System &bull; Mobile-First Web Experience</span>
-        <span>Slide 8 of 12</span>
+        <span>Expected Outcomes &bull; Digital Pass &amp; Administrator Control</span>
+        <span>Slide 11 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 9: ADMIN DASHBOARD & TELEMETRY ================= -->
-    <section class="slide" id="slide-9">
+    <!-- ================= SLIDE 12: TESTING, VERIFICATION & CLOUD ================= -->
+    <section class="slide" id="slide-12">
       <div>
-        <div class="slide-tag">Section 8 &bull; Management &amp; Analytics</div>
-        <h2 class="slide-heading">Executive Administrator Dashboard &amp; Live Telemetry</h2>
-
-        <div class="grid-2">
-          <div class="card-box">
-            <h4 style="color:#ef4444;margin-bottom:8px;font-size:1.05rem;">Chief Medical Administrator: Dr. Anshuman Jaglan</h4>
-            <p style="font-size:0.85rem;color:#cbd5e1;line-height:1.4;">
-              Role-based administrative authentication with session security and comprehensive audit trails.
-            </p>
-            <div style="margin-top:14px;background:#0f172a;padding:12px;border-radius:8px;">
-              <strong style="color:#38bdf8;font-size:0.85rem;">One-Click Inventory Steppers:</strong>
-              <p style="font-size:0.8rem;color:#94a3b8;margin-top:2px;">
-                Direct +/- buttons to increment or decrement units for emergency shipments or walk-in camps.
-              </p>
-            </div>
-            <div style="margin-top:10px;background:#0f172a;padding:12px;border-radius:8px;">
-              <strong style="color:#f59e0b;font-size:0.85rem;">Direct Fulfillment &amp; Donor Dispatch:</strong>
-              <p style="font-size:0.8rem;color:#94a3b8;margin-top:2px;">
-                One-click action to dispense directly from blood bank stock (auto-deducts units) or assign registered donors.
-              </p>
-            </div>
-          </div>
-
-          <div class="card-box">
-            <h4 style="color:#4ade80;margin-bottom:8px;font-size:1.05rem;">Live Dynamic Telemetry &amp; Persistent Memory</h4>
-            <p style="font-size:0.85rem;color:#cbd5e1;line-height:1.4;">
-              Clicking <strong>Refresh Live Data</strong> executes simulation syncing realistic hospital activity while permanently preserving manual edits into memory!
-            </p>
-            <div style="margin-top:14px;background:#0f172a;padding:12px;border-radius:8px;">
-              <strong style="color:#4ade80;font-size:0.85rem;">Interactive Chart.js Visualizations:</strong>
-              <p style="font-size:0.8rem;color:#94a3b8;margin-top:2px;">
-                Live stock bar charts and requisition doughnut charts dynamically re-render upon data sync.
-              </p>
-            </div>
-            <div style="margin-top:10px;background:#0f172a;padding:12px;border-radius:8px;">
-              <strong style="color:#c084fc;font-size:0.85rem;">Instant CSV Audit Exports:</strong>
-              <p style="font-size:0.8rem;color:#94a3b8;margin-top:2px;">
-                Export verified donor registries and complete inventory balance sheets for academic viva assessment.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="slide-footer">
-        <span>Admin Dashboard &bull; Chief Administrator: Dr. Anshuman Jaglan</span>
-        <span>Slide 9 of 12</span>
-      </div>
-    </section>
-
-    <!-- ================= SLIDE 10: TESTING, VERIFICATION & CLOUD ================= -->
-    <section class="slide" id="slide-10">
-      <div>
-        <div class="slide-tag">Section 9 &bull; Quality Assurance &amp; DevOps</div>
-        <h2 class="slide-heading">Testing, Verification &amp; Cloud Deployment</h2>
+        <div class="slide-tag">Section 6 &bull; Quality Assurance &amp; DevOps</div>
+        <h2 class="slide-heading">System Verification, Testing &amp; Cloud Deployment</h2>
 
         <!-- Sanity Banner -->
         <div class="card-box" style="background:#064e3b;border-color:#059669;margin-bottom:16px;">
@@ -697,43 +859,58 @@
 
       <div class="slide-footer">
         <span>Quality Assurance &bull; 100% Verified Production Pipeline</span>
-        <span>Slide 10 of 12</span>
+        <span>Slide 12 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 11: SOCIETAL IMPACT & FUTURE WORK ================= -->
-    <section class="slide" id="slide-11">
+    <!-- ================= SLIDE 13: 6. REFERENCES ================= -->
+    <section class="slide" id="slide-13">
       <div>
-        <div class="slide-tag">Section 10 &bull; Impact &amp; Roadmap</div>
-        <h2 class="slide-heading">Societal Impact, SDGs &amp; Future Enhancements</h2>
+        <div class="slide-tag">Section 7 &bull; Academic Bibliography</div>
+        <h2 class="slide-heading">6. References</h2>
 
-        <div class="grid-2">
-          <div class="card-box" style="border-top:3px solid #10b981;">
-            <h4 style="color:#4ade80;margin-bottom:8px;font-size:1rem;">Sustainable Development Goals (SDGs)</h4>
-            <div style="font-size:0.825rem;color:#cbd5e1;line-height:1.4;">
-              <strong style="color:#fff;">• SDG 3 (Good Health &amp; Well-Being):</strong> Slashes emergency requisition delays, directly improving clinical survival in road accidents, emergency surgeries, and maternal hemorrhages.<br><br>
-              <strong style="color:#fff;">• SDG 9 (Industry, Innovation &amp; Infrastructure):</strong> Replaces archaic paper logs with an enterprise-grade digital health network.
-            </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="card-box" style="padding:10px 14px;border-left:3px solid #38bdf8;">
+            <p style="font-size:0.825rem;color:#cbd5e1;">
+              <strong>[1]</strong> World Health Organization (WHO), <em>"Blood Donor Selection: Guidelines on Assessing Donor Suitability for Blood Donation"</em>, WHO Guidelines Approved by the Guidelines Review Committee, Geneva, 2012.
+            </p>
           </div>
-
-          <div class="card-box" style="border-top:3px solid #38bdf8;">
-            <h4 style="color:#38bdf8;margin-bottom:8px;font-size:1rem;">Future Roadmap Enhancements</h4>
-            <div style="font-size:0.825rem;color:#cbd5e1;line-height:1.4;">
-              <strong style="color:#fff;">• Automated WhatsApp / SMS Gateway:</strong> Real-time geolocation emergency alerts to nearby eligible donors via Twilio or Meta WhatsApp Cloud API.<br><br>
-              <strong style="color:#fff;">• IoT Cold-Chain Storage Monitoring:</strong> Integrated hardware sensors to ensure blood bags maintain 2°C to 6°C cold-chain integrity.
-            </div>
+          <div class="card-box" style="padding:10px 14px;border-left:3px solid #ef4444;">
+            <p style="font-size:0.825rem;color:#cbd5e1;">
+              <strong>[2]</strong> National Blood Transfusion Council (NBTC) &amp; NACO, <em>"Standards for Blood Banks &amp; Blood Transfusion Services"</em>, Ministry of Health and Family Welfare, Government of India, New Delhi.
+            </p>
+          </div>
+          <div class="card-box" style="padding:10px 14px;border-left:3px solid #4ade80;">
+            <p style="font-size:0.825rem;color:#cbd5e1;">
+              <strong>[3]</strong> B. Sharma, S. K. Verma, and R. K. Gupta, <em>"Optimization of Blood Supply Chain and Emergency Dispatch Using Intelligent Geo-Spatial Systems"</em>, <em>IEEE Transactions on Healthcare Informatics</em>, vol. 18, no. 4, pp. 210-218, 2022.
+            </p>
+          </div>
+          <div class="card-box" style="padding:10px 14px;border-left:3px solid #f59e0b;">
+            <p style="font-size:0.825rem;color:#cbd5e1;">
+              <strong>[4]</strong> A. Kumar and P. Roy, <em>"Design and Implementation of Web-Based Healthcare Information Management Platforms with Real-Time Auditing"</em>, <em>International Journal of Computer Applications</em>, vol. 182, no. 45, pp. 12-19, 2021.
+            </p>
+          </div>
+          <div class="card-box" style="padding:10px 14px;border-left:3px solid #c084fc;">
+            <p style="font-size:0.825rem;color:#cbd5e1;">
+              <strong>[5]</strong> Ministry of Health &amp; Family Welfare, Govt. of India, <em>"e-RaktKosh: National Blood Bank Portal Technical Architecture &amp; Data Standards"</em>, Central Health Informatics, 2020.
+            </p>
+          </div>
+          <div class="card-box" style="padding:10px 14px;border-left:3px solid #2dd4bf;">
+            <p style="font-size:0.825rem;color:#cbd5e1;">
+              <strong>[6]</strong> Guru Gobind Singh Indraprastha University (GGSIPU), <em>"Guidelines and Academic Regulations for Bachelor of Technology Minor Projects"</em>, University School of Information and Communication Technology, Batch 2023-2027.
+            </p>
           </div>
         </div>
       </div>
 
       <div class="slide-footer">
-        <span>Societal Impact &bull; United Nations SDGs &bull; Future Scope</span>
-        <span>Slide 11 of 12</span>
+        <span>Formal IEEE Academic Citations &bull; Minor Project References</span>
+        <span>Slide 13 of 14</span>
       </div>
     </section>
 
-    <!-- ================= SLIDE 12: THANK YOU & VIVA VOce ================= -->
-    <section class="slide" id="slide-12">
+    <!-- ================= SLIDE 14: THANK YOU & VIVA VOce ================= -->
+    <section class="slide" id="slide-14">
       <div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <span style="color:#ef4444;font-size:1.1rem;font-weight:800;">MAIT &bull; DEPARTMENT OF ITE</span>
@@ -780,7 +957,7 @@
   <!-- Interactive Presentation Script & Dynamic Chart Initializer -->
   <script>
     let currentSlide = 1;
-    const totalSlides = 12;
+    const totalSlides = 14;
     const chartsInitialized = {};
 
     function showSlide(num) {
@@ -794,22 +971,19 @@
 
       document.getElementById('slide-num').innerText = `${currentSlide} / ${totalSlides}`;
 
-      // Initialize charts when slide becomes active
-      if (currentSlide === 2 && !chartsInitialized['latency']) {
+      // Initialize charts when their slide becomes active
+      if (currentSlide === 4 && !chartsInitialized['latency']) {
         initLatencyChart();
         chartsInitialized['latency'] = true;
       }
-      if (currentSlide === 3 && !chartsInitialized['inventory']) {
+      if (currentSlide === 9 && !chartsInitialized['inventory']) {
         initInventoryChart();
         chartsInitialized['inventory'] = true;
       }
-      if (currentSlide === 6 && !chartsInitialized['requests']) {
+      if (currentSlide === 10 && !chartsInitialized['requests']) {
         initRequestsChart();
-        chartsInitialized['requests'] = true;
-      }
-      if (currentSlide === 7 && !chartsInitialized['trends']) {
         initTrendsChart();
-        chartsInitialized['trends'] = true;
+        chartsInitialized['requests'] = true;
       }
     }
 
@@ -923,7 +1097,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'bottom', labels: { color: '#f8fafc', font: { size: 11 } } }
+            legend: { position: 'bottom', labels: { color: '#f8fafc', font: { size: 10 } } }
           },
           cutout: '65%'
         }
@@ -935,25 +1109,25 @@
       new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['April', 'May', 'June', 'July', 'August', 'September'],
+          labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
           datasets: [
             {
-              label: 'Voluntary Camp Donations',
+              label: 'Camp Donations',
               data: [42, 58, 74, 65, 89, 112],
               borderColor: '#ef4444',
               backgroundColor: 'rgba(239, 68, 68, 0.15)',
               fill: true,
               tension: 0.35,
-              pointRadius: 5
+              pointRadius: 4
             },
             {
-              label: 'Hospital Requisitions',
+              label: 'Hospital Demands',
               data: [38, 52, 68, 62, 81, 98],
               borderColor: '#3b82f6',
               backgroundColor: 'rgba(59, 130, 246, 0.1)',
               fill: true,
               tension: 0.35,
-              pointRadius: 5
+              pointRadius: 4
             }
           ]
         },
@@ -961,11 +1135,11 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#f8fafc', font: { size: 12 } } }
+            legend: { labels: { color: '#f8fafc', font: { size: 11 } } }
           },
           scales: {
             x: { ticks: { color: '#cbd5e1' }, grid: { color: '#374151' } },
-            y: { ticks: { color: '#cbd5e1' }, grid: { color: '#374151' }, title: { display: true, text: 'Units Dispensed / Collected', color: '#94a3b8' } }
+            y: { ticks: { color: '#cbd5e1' }, grid: { color: '#374151' } }
           }
         }
       });

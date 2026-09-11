@@ -1,0 +1,3 @@
+@echo off
+echo Opening Blood Donation Management System Presentation in PowerPoint...
+start "" "%~dp0Blood_Donation_Management_System_Presentation.pptx"

@@ -1,9 +1,26 @@
 # Blood Donation Management System — Minor Project Report
 
-**Department of Computer Science & Engineering / Information Technology**  
-**Academic Minor Project Documentation**
+**Maharaja Agrasen Institute of Technology (MAIT)**  
+**Department of Information Technology & Engineering (ITE)**  
+**Academic Minor Project Evaluation 2026**
 
 ---
+
+### Project Submission Details
+
+| Field | Information |
+| :--- | :--- |
+| **Project Title** | **Blood Donation Management System** |
+| **Developed By** | **Anshuman Jaglan** (Roll No: `1614813123`)<br>**Harsh Solanki** (Roll No: `1514813123`)<br>**Umesh Kumar** (Roll No: `1314813123`) |
+| **Institution** | Maharaja Agrasen Institute of Technology (MAIT) |
+| **Department** | Department of Information Technology & Engineering (ITE) |
+| **Project Guide** | **Ms. Sapna Gupta** |
+| **Mentor Teacher** | **Mr. Pawan Sharma** |
+| **Head of Department (HOD)** | **Dr. Bhoomi Gupta** |
+| **Lead Contact** | Phone: **+91 9466291852** &bull; Email: **jaglananshuman@gmail.com** |
+
+---
+
 
 ## 1. Executive Summary & Abstract
 Blood is a non-substitutable, life-critical medical resource. During clinical emergencies—such as road traffic trauma, acute surgical hemorrhage, severe anemia, and postpartum complications—delays in procuring compatible blood groups can lead to preventable mortality. In traditional workflows, inventory and donor information remain fragmented across isolated blood banks, municipal hospitals, and voluntary registries.

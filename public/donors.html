@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Blood Donors | Blood Donation Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">RaktDaan</span>
+          <span class="brand-subtitle">Blood Donation Management</span>
+        </div>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="donors.html" class="active">Find Donors</a></li>
+        <li><a href="register-donor.html">Become a Donor</a></li>
+        <li><a href="request-blood.html">Request Blood</a></li>
+        <li><a href="track-request.html">Track Status</a></li>
+        <li><a href="hospital.html">Hospitals</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="request-blood.html" class="btn btn-danger btn-sm">Emergency Request</a>
+        <a href="admin-login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section style="background:linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);padding:40px 0 30px;border-bottom:1px solid var(--border);">
+    <div class="container">
+      <h1 style="font-size:2.2rem;font-weight:800;color:var(--text-main);margin-bottom:8px;">
+        Registered Voluntary Blood Donors
+      </h1>
+      <p style="color:var(--text-muted);font-size:1.05rem;">
+        Search verified voluntary donors by blood group and city, or use our smart medical compatibility matcher.
+      </p>
+
+      <!-- View Selector (Direct Search vs Smart Matcher) -->
+      <div style="display:flex;gap:12px;margin-top:20px;">
+        <button id="tab-direct-btn" class="btn btn-primary btn-sm" onclick="switchTab('direct')">
+          Standard Donor Directory
+        </button>
+        <button id="tab-matching-btn" class="btn btn-outline btn-sm" onclick="switchTab('matching')">
+          &#9877; Smart Compatibility Matcher (ABO / Rh)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="container" style="padding:36px 20px 60px;">
+
+    <!-- DIRECT SEARCH FILTER TOOLBAR -->
+    <div id="direct-search-box" class="card">
+      <form id="filter-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr)) auto;gap:16px;align-items:flex-end;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Blood Group</label>
+          <select id="filter-blood-group" class="form-control">
+            <option value="">All Blood Groups</option>
+            <option value="A+">A Positive (A+)</option>
+            <option value="A-">A Negative (A-)</option>
+            <option value="B+">B Positive (B+)</option>
+            <option value="B-">B Negative (B-)</option>
+            <option value="AB+">AB Positive (AB+)</option>
+            <option value="AB-">AB Negative (AB-)</option>
+            <option value="O+">O Positive (O+)</option>
+            <option value="O-">O Negative (O-)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">City / District</label>
+          <input type="text" id="filter-city" class="form-control" placeholder="Search by city (e.g. Delhi)">
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;display:flex;align-items:center;height:42px;">
+          <label class="checkbox-label" style="margin-bottom:0;">
+            <input type="checkbox" id="filter-available" checked>
+            <span>Available Donors Only</span>
+          </label>
+        </div>
+
+        <div>
+          <button type="submit" class="btn btn-primary" style="height:42px;">Filter Donors</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- SMART COMPATIBILITY MATCHER TOOLBAR -->
+    <div id="matching-box" class="card" style="display:none;border:2px solid #3b82f6;background:#eff6ff;">
+      <div style="margin-bottom:14px;">
+        <h3 style="color:#1d4ed8;">Smart Donor-Recipient Matching Algorithm</h3>
+        <p style="font-size:0.875rem;color:#1e40af;">
+          Specify the patient's blood group and city. The system applies clinical transfusion matrices (including universal donor $O^-$ and matching Rh compatibility) to find the best available donors.
+        </p>
+      </div>
+
+      <form id="matching-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr)) auto;gap:16px;align-items:flex-end;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Patient's Blood Group <span class="required">*</span></label>
+          <select id="match-blood-group" class="form-control" required>
+            <option value="">-- Select Patient Blood Group --</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label">Hospital / Patient City</label>
+          <input type="text" id="match-city" class="form-control" placeholder="e.g. Delhi, Noida, Gurugram">
+        </div>
+
+        <div>
+          <button type="submit" class="btn btn-primary" style="height:42px;background:#2563eb;">
+            Run Matching Engine &rarr;
+          </button>
+        </div>
+      </form>
+
+      <div id="match-summary-badge" style="margin-top:14px;display:none;"></div>
+    </div>
+
+    <!-- Results Status Bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:20px 0 12px;">
+      <span style="font-weight:700;font-size:1.1rem;color:var(--text-main);" id="donors-count-text">
+        Showing registered donors...
+      </span>
+      <a href="register-donor.html" class="btn btn-outline btn-sm">+ Register as a Donor</a>
+    </div>
+
+    <!-- Donors Grid -->
+    <div class="donors-grid" id="donors-list">
+      <div style="text-align:center;grid-column:1/-1;padding:40px;color:var(--text-muted);">
+        Loading donors list...
+      </div>
+    </div>
+  </main>
+
+  <!-- Contact Modal -->
+  <div class="modal-backdrop" id="contact-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Contact Voluntary Donor</h3>
+        <button class="modal-close" onclick="closeContactModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="contact-modal-body">
+        <!-- Injected via JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeContactModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Blood Donation Management System. Built for academic demonstration &amp; healthcare excellence.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    let currentMode = 'direct';
+    let allDonorsCache = [];
+
+    // Parse URL params for initial filters
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialBg = urlParams.get('blood_group');
+    const initialCity = urlParams.get('city');
+
+    if (initialBg) {
+      document.getElementById('filter-blood-group').value = initialBg;
+    }
+    if (initialCity) {
+      document.getElementById('filter-city').value = initialCity;
+    }
+
+    function switchTab(mode) {
+      currentMode = mode;
+      const directBox = document.getElementById('direct-search-box');
+      const matchBox = document.getElementById('matching-box');
+      const directBtn = document.getElementById('tab-direct-btn');
+      const matchBtn = document.getElementById('tab-matching-btn');
+
+      if (mode === 'direct') {
+        directBox.style.display = 'block';
+        matchBox.style.display = 'none';
+        directBtn.className = 'btn btn-primary btn-sm';
+        matchBtn.className = 'btn btn-outline btn-sm';
+        fetchDonors();
+      } else {
+        directBox.style.display = 'none';
+        matchBox.style.display = 'block';
+        directBtn.className = 'btn btn-outline btn-sm';
+        matchBtn.className = 'btn btn-primary btn-sm';
+        if (initialBg) {
+          document.getElementById('match-blood-group').value = initialBg;
+        }
+        if (initialCity) {
+          document.getElementById('match-city').value = initialCity;
+        }
+      }
+    }
+
+    // Direct Search Form
+    document.getElementById('filter-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      fetchDonors();
+    });
+
+    // Matching Form
+    document.getElementById('matching-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const bg = document.getElementById('match-blood-group').value;
+      const city = document.getElementById('match-city').value.trim();
+
+      if (!bg) {
+        showToast('Please select patient blood group', 'error');
+        return;
+      }
+
+      const donorsContainer = document.getElementById('donors-list');
+      const countText = document.getElementById('donors-count-text');
+      const summaryBadge = document.getElementById('match-summary-badge');
+      donorsContainer.innerHTML = `<div style="text-align:center;grid-column:1/-1;padding:30px;">Running compatibility algorithm...</div>`;
+
+      try {
+        const res = await fetch(`/api/matching?blood_group=${encodeURIComponent(bg)}&city=${encodeURIComponent(city)}`);
+        const json = await res.json();
+
+        if (json.success && json.data) {
+          const { compatibleBloodGroups, matches, totalFound } = json.data;
+          summaryBadge.style.display = 'block';
+          summaryBadge.innerHTML = `
+            <div style="padding:10px 14px;background:#ffffff;border-radius:6px;font-size:0.85rem;color:#1e3a8a;border:1px solid #bfdbfe;">
+              <strong>Compatible Blood Groups for ${bg}:</strong> ${compatibleBloodGroups.join(', ')} &bull; 
+              <strong>Matched Donors Found:</strong> ${totalFound}
+            </div>
+          `;
+
+          countText.innerText = `Matched Donors (${totalFound} found)`;
+          renderDonors(matches, true);
+        }
+      } catch (err) {
+        donorsContainer.innerHTML = `<div style="text-align:center;grid-column:1/-1;color:var(--danger);">Error running matching service.</div>`;
+      }
+    });
+
+    // Fetch Donors standard list
+    async function fetchDonors() {
+      const bg = document.getElementById('filter-blood-group').value;
+      const city = document.getElementById('filter-city').value.trim();
+      const onlyAvail = document.getElementById('filter-available').checked;
+
+      const donorsContainer = document.getElementById('donors-list');
+      const countText = document.getElementById('donors-count-text');
+      donorsContainer.innerHTML = `<div style="text-align:center;grid-column:1/-1;padding:30px;">Loading donors...</div>`;
+
+      let url = `/api/donors?`;
+      if (bg) url += `blood_group=${encodeURIComponent(bg)}&`;
+      if (city) url += `city=${encodeURIComponent(city)}&`;
+      if (onlyAvail) url += `is_available=true&`;
+
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.success && json.data) {
+          allDonorsCache = json.data;
+          countText.innerText = `Available Donors (${json.data.length} registered)`;
+          renderDonors(json.data, false);
+        } else {
+          donorsContainer.innerHTML = `<div style="text-align:center;grid-column:1/-1;">No donors found.</div>`;
+        }
+      } catch (err) {
+        donorsContainer.innerHTML = `<div style="text-align:center;grid-column:1/-1;color:var(--danger);">Failed to load donors.</div>`;
+      }
+    }
+
+    function renderDonors(donors, isMatchMode = false) {
+      const container = document.getElementById('donors-list');
+      if (!donors || donors.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center;grid-column:1/-1;padding:40px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);">
+            <h3>No matching blood donors found</h3>
+            <p style="color:var(--text-muted);margin:8px 0 16px;">Try adjusting your city filter, or submit an urgent blood request for hospital coordination.</p>
+            <a href="request-blood.html" class="btn btn-danger btn-sm">Submit Urgent Request</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = donors.map(d => `
+        <div class="donor-card">
+          <div>
+            <div class="donor-header">
+              <div>
+                <div class="donor-name">${d.full_name}</div>
+                <div class="donor-meta">${d.gender}, ${d.age} yrs</div>
+              </div>
+              <div class="donor-blood-badge">${d.blood_group}</div>
+            </div>
+
+            ${isMatchMode ? `
+              <div style="background:#eff6ff;color:#1e40af;font-size:0.75rem;padding:4px 8px;border-radius:4px;margin-bottom:10px;font-weight:600;">
+                Score: ${d.matchScore}% &bull; ${d.locationMatch} ${d.isExactBloodMatch ? '&bull; Exact Type' : '&bull; Compatible'}
+              </div>
+            ` : ''}
+
+            <ul class="donor-details">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>${d.city}${d.district ? ', ' + d.district : ''}</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span>Last Donated: ${d.last_donation_date || 'First-time Donor'}</span>
+              </li>
+              <li>
+                <span class="availability-pill ${d.is_available ? 'avail-available' : 'avail-unavailable'}">
+                  ${d.is_available ? '&#9679; Available Now' : '&#9679; Temporarily Inactive'}
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div style="margin-top:14px;">
+            <button class="btn btn-outline btn-sm btn-block" onclick="openContactModal(${d.id}, '${escapeQuotes(d.full_name)}', '${d.blood_group}', '${d.phone}', '${d.city}')">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.68.59 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.68 1 1 0 01-.24 1.02l-2.23 2.09z"/></svg>
+              Contact Donor
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeQuotes(str) {
+      return (str || '').replace(/'/g, "\\'");
+    }
+
+    function openContactModal(id, name, bloodGroup, phone, city) {
+      const modal = document.getElementById('contact-modal');
+      const modalBody = document.getElementById('contact-modal-body');
+
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const waLink = `https://wa.me/${cleanPhone}?text=Hello%20${encodeURIComponent(name)},%20I%20found%20your%20voluntary%20blood%20donor%20profile%20on%20RaktDaan.%20Are%20you%20available%20for%20a%20${encodeURIComponent(bloodGroup)}%20donation%20in%20${encodeURIComponent(city)}?`;
+
+      modalBody.innerHTML = `
+        <div style="text-align:center;margin-bottom:20px;">
+          <div class="donor-blood-badge" style="margin:0 auto 10px;width:56px;height:56px;font-size:1.4rem;">${bloodGroup}</div>
+          <h3 style="margin-bottom:4px;">${name}</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Registered Voluntary Donor in ${city}</p>
+        </div>
+
+        <div style="background:#f8fafc;padding:16px;border-radius:var(--radius-md);border:1px solid var(--border);margin-bottom:20px;">
+          <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;">Verified Phone Number</div>
+          <div style="font-size:1.3rem;font-weight:800;color:var(--text-main);margin-top:4px;">${phone}</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="tel:${phone}" class="btn btn-primary btn-block">
+            Call Donor Directly
+          </a>
+          <a href="${waLink}" target="_blank" rel="noopener" class="btn btn-block" style="background:#25D366;color:#ffffff;">
+            Send WhatsApp Message
+          </a>
+        </div>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:14px;text-align:center;">
+          Ethics &amp; Privacy: Use donor contact information strictly for genuine medical blood requirements.
+        </p>
+      `;
+
+      modal.classList.add('show');
+    }
+
+    function closeContactModal() {
+      document.getElementById('contact-modal').classList.remove('show');
+    }
+
+    // Initialize
+    fetchDonors();
+  </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Network Portal | RaktDaan</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">RaktDaan</span>
+          <span class="brand-subtitle">Blood Donation Management</span>
+        </div>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="donors.html">Find Donors</a></li>
+        <li><a href="register-donor.html">Become a Donor</a></li>
+        <li><a href="request-blood.html">Request Blood</a></li>
+        <li><a href="track-request.html">Track Status</a></li>
+        <li><a href="hospital.html" class="active">Hospitals</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="request-blood.html" class="btn btn-danger btn-sm">Emergency Request</a>
+        <a href="admin-login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding:40px 20px 60px;">
+    <div class="section-header" style="text-align:left;margin-bottom:28px;">
+      <h1 style="font-size:2.2rem;font-weight:800;color:var(--text-main);">Hospital &amp; Healthcare Partner Portal</h1>
+      <p style="color:var(--text-muted);font-size:1rem;margin-top:6px;">
+        Empowering medical facilities with coordinated blood supply chains, emergency requisitions, and inventory audits.
+      </p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;">
+      <!-- Hospital Registration Form -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Register Hospital / Blood Bank</h3>
+        </div>
+        <form id="hospital-form">
+          <div class="form-group">
+            <label class="form-label">Hospital / Center Name <span class="required">*</span></label>
+            <input type="text" id="h-name" class="form-control" placeholder="e.g. City Care Multispeciality Hospital" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Medical License No. <span class="required">*</span></label>
+              <input type="text" id="h-license" class="form-control" placeholder="e.g. HOSP-DEL-109" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">City <span class="required">*</span></label>
+              <input type="text" id="h-city" class="form-control" placeholder="e.g. Delhi, Noida" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Hospital Address</label>
+            <input type="text" id="h-address" class="form-control" placeholder="Street, Area, Landmark">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Coordinator / Doctor Name <span class="required">*</span></label>
+              <input type="text" id="h-contact" class="form-control" placeholder="Dr. / Officer Name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Official Phone <span class="required">*</span></label>
+              <input type="tel" id="h-phone" class="form-control" placeholder="+91 11 20000000" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Official Email <span class="required">*</span></label>
+            <input type="email" id="h-email" class="form-control" placeholder="bloodbank@hospital.com" required>
+          </div>
+
+          <button type="submit" id="h-btn" class="btn btn-primary btn-block">
+            Register Hospital in Network &rarr;
+          </button>
+        </form>
+      </div>
+
+      <!-- Verified Partner Directory -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Affiliated Healthcare Centers</h3>
+          </div>
+          <div id="hospitals-list" style="display:flex;flex-direction:column;gap:14px;">
+            <p style="color:var(--text-muted);text-align:center;">Loading affiliated hospitals...</p>
+          </div>
+        </div>
+
+        <div class="card" style="background:#fff1f2;border:1px solid #fecdd3;">
+          <h4 style="color:#be123c;margin-bottom:8px;">Bulk Emergency Transfusion Orders</h4>
+          <p style="font-size:0.875rem;color:#9f1239;margin-bottom:14px;">
+            Hospitals requiring batch supply for disaster relief, multiple trauma cases, or planned surgical schedules can submit priority requisitions directly.
+          </p>
+          <a href="request-blood.html" class="btn btn-danger btn-sm">Submit Hospital Emergency Requisition &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Blood Donation Management System. Built for academic demonstration &amp; healthcare excellence.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    async function loadHospitals() {
+      const container = document.getElementById('hospitals-list');
+      try {
+        const res = await fetch('/api/hospitals');
+        const json = await res.json();
+        if (json.success && json.data) {
+          container.innerHTML = json.data.map(h => `
+            <div style="padding:14px;background:#f8fafc;border-radius:var(--radius-sm);border:1px solid var(--border);">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+                <div>
+                  <strong style="color:var(--text-main);font-size:1rem;">${h.name}</strong>
+                  <div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">
+                    ${h.city} &bull; License: ${h.license_number || 'N/A'}
+                  </div>
+                </div>
+                <span class="badge badge-fulfilled">Verified</span>
+              </div>
+              <div style="font-size:0.85rem;color:var(--text-muted);margin-top:8px;">
+                Contact: ${h.contact_person} &bull; Tel: <a href="tel:${h.phone}">${h.phone}</a>
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        container.innerHTML = `<p style="color:var(--danger);">Error loading hospitals.</p>`;
+      }
+    }
+
+    document.getElementById('hospital-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('h-btn');
+      btn.disabled = true;
+      btn.innerText = 'Registering Hospital...';
+
+      const payload = {
+        name: document.getElementById('h-name').value.trim(),
+        license_number: document.getElementById('h-license').value.trim(),
+        city: document.getElementById('h-city').value.trim(),
+        address: document.getElementById('h-address').value.trim(),
+        contact_person: document.getElementById('h-contact').value.trim(),
+        phone: document.getElementById('h-phone').value.trim(),
+        email: document.getElementById('h-email').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/hospitals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          showToast('Hospital registered into network successfully!', 'success');
+          document.getElementById('hospital-form').reset();
+          loadHospitals();
+        } else {
+          showToast(json.message || 'Registration failed', 'error');
+        }
+      } catch (err) {
+        showToast('Network error while saving hospital', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Register Hospital in Network →';
+      }
+    });
+
+    loadHospitals();
+  </script>
+</body>
+</html>

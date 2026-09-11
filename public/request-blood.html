@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Blood | Blood Donation Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">RaktDaan</span>
+          <span class="brand-subtitle">Blood Donation Management</span>
+        </div>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="donors.html">Find Donors</a></li>
+        <li><a href="register-donor.html">Become a Donor</a></li>
+        <li><a href="request-blood.html" class="active">Request Blood</a></li>
+        <li><a href="track-request.html">Track Status</a></li>
+        <li><a href="hospital.html">Hospitals</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="track-request.html" class="btn btn-outline btn-sm">Track Request</a>
+        <a href="admin-login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding:40px 20px 60px;max-width:800px;">
+    <div class="section-header" style="text-align:left;margin-bottom:28px;">
+      <h1 style="font-size:2.2rem;font-weight:800;color:var(--text-main);">Blood Requirement Request</h1>
+      <p style="color:var(--text-muted);font-size:1rem;margin-top:6px;">
+        Submit a verified patient or hospital requirement. Our team and automated matching engine will coordinate with available blood banks and voluntary donors.
+      </p>
+    </div>
+
+    <!-- Request Form -->
+    <div class="card" id="request-form-card">
+      <form id="blood-request-form">
+
+        <!-- EMERGENCY TOGGLE SWITCH -->
+        <div class="emergency-switch-box" id="emergency-box">
+          <label>
+            <input type="checkbox" id="is_emergency" style="width:20px;height:20px;accent-color:#e11d48;">
+            <span>🚨 Mark as EMERGENCY / CRITICAL Priority (Immediate Response Needed)</span>
+          </label>
+          <div style="font-size:0.8rem;color:#9f1239;margin-top:6px;margin-left:30px;">
+            Emergency requests trigger high-priority alerts on the administrator dashboard and activate local donor broadcast notifications.
+          </div>
+        </div>
+
+        <!-- Patient & Blood Info -->
+        <h3 style="font-size:1.1rem;color:var(--primary);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          1. Patient Requirement
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Patient Full Name <span class="required">*</span></label>
+            <input type="text" id="patient_name" class="form-control" placeholder="e.g. Sunil Kapoor" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Required Blood Group <span class="required">*</span></label>
+            <select id="blood_group" class="form-control" required>
+              <option value="">-- Select Blood Group --</option>
+              <option value="A+">A Positive (A+)</option>
+              <option value="A-">A Negative (A-)</option>
+              <option value="B+">B Positive (B+)</option>
+              <option value="B-">B Negative (B-)</option>
+              <option value="AB+">AB Positive (AB+)</option>
+              <option value="AB-">AB Negative (AB-)</option>
+              <option value="O+">O Positive (O+)</option>
+              <option value="O-">O Negative (O-)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Units of Blood Needed <span class="required">*</span></label>
+            <input type="number" id="units_needed" class="form-control" min="1" max="10" value="1" required>
+            <span class="form-help">Standard unit = 350-450 ml</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Required By Date <span class="required">*</span></label>
+            <input type="date" id="required_by_date" class="form-control" required>
+          </div>
+        </div>
+
+        <!-- Hospital Location -->
+        <h3 style="font-size:1.1rem;color:var(--primary);margin:24px 0 16px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          2. Hospital &amp; Medical Facility
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Hospital / Clinic Name <span class="required">*</span></label>
+            <input type="text" id="hospital_name" class="form-control" placeholder="e.g. AIIMS Central Hospital, Delhi" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">City <span class="required">*</span></label>
+            <input type="text" id="city" class="form-control" placeholder="e.g. Delhi, Noida, Gurugram" required>
+          </div>
+        </div>
+
+        <!-- Contact Coordinator -->
+        <h3 style="font-size:1.1rem;color:var(--primary);margin:24px 0 16px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+          3. Contact Person &amp; Attendant
+        </h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Contact Person Name <span class="required">*</span></label>
+            <input type="text" id="contact_person" class="form-control" placeholder="Doctor or Relative Name" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Contact Mobile Phone <span class="required">*</span></label>
+            <input type="tel" id="contact_phone" class="form-control" placeholder="+91 9876543210" required>
+            <span class="form-help">Will be used for status tracking &amp; donor contact</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Contact Email</label>
+          <input type="email" id="contact_email" class="form-control" placeholder="attendant@example.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Medical Reason / Purpose of Transfusion</label>
+          <textarea id="reason" class="form-control" rows="3" placeholder="e.g. Surgery, accident trauma, dialysis, severe thalassemia..."></textarea>
+        </div>
+
+        <button type="submit" id="submit-req-btn" class="btn btn-primary btn-lg btn-block">
+          Submit Blood Requirement Request &rarr;
+        </button>
+      </form>
+    </div>
+
+    <!-- Success Feedback Card -->
+    <div class="card" id="success-req-card" style="display:none;padding:36px;text-align:center;">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--success-bg);color:var(--success);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2rem;">
+        &#10004;
+      </div>
+      <h2 style="font-size:1.8rem;color:var(--text-main);font-weight:800;margin-bottom:6px;">Blood Request Logged!</h2>
+      <p style="color:var(--text-muted);margin-bottom:20px;">
+        Your request has been broadcasted to the Central Blood Bank team and matching voluntary donors.
+      </p>
+
+      <div style="background:#f1f5f9;border:1px dashed #94a3b8;border-radius:var(--radius-md);padding:20px;max-width:480px;margin:0 auto 24px;">
+        <div style="font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;font-weight:700;">YOUR UNIQUE TRACKING CODE</div>
+        <div style="font-size:2rem;font-weight:900;color:var(--primary);margin:6px 0;" id="assigned-code">REQ-2026-000</div>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">
+          Save this code or your mobile number to check the real-time fulfillment status anytime.
+        </p>
+      </div>
+
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a id="track-direct-btn" href="track-request.html" class="btn btn-primary">Track This Request Now &rarr;</a>
+        <a href="donors.html" class="btn btn-outline">Search Voluntary Donors</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Blood Donation Management System. Built for academic demonstration &amp; healthcare excellence.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Set default required date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('required_by_date').value = tomorrow.toISOString().split('T')[0];
+
+    // Visual reaction to emergency checkbox
+    const emergencyCheckbox = document.getElementById('is_emergency');
+    const submitBtn = document.getElementById('submit-req-btn');
+
+    emergencyCheckbox.addEventListener('change', () => {
+      if (emergencyCheckbox.checked) {
+        submitBtn.className = 'btn btn-danger btn-lg btn-block';
+        submitBtn.innerText = '🚨 SUBMIT CRITICAL EMERGENCY REQUEST NOW';
+      } else {
+        submitBtn.className = 'btn btn-primary btn-lg btn-block';
+        submitBtn.innerText = 'Submit Blood Requirement Request →';
+      }
+    });
+
+    // Form Submission
+    document.getElementById('blood-request-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Transmitting Blood Request...';
+
+      const payload = {
+        patient_name: document.getElementById('patient_name').value.trim(),
+        blood_group: document.getElementById('blood_group').value,
+        units_needed: parseInt(document.getElementById('units_needed').value) || 1,
+        hospital_name: document.getElementById('hospital_name').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        contact_person: document.getElementById('contact_person').value.trim(),
+        contact_phone: document.getElementById('contact_phone').value.trim(),
+        contact_email: document.getElementById('contact_email').value.trim(),
+        required_by_date: document.getElementById('required_by_date').value,
+        reason: document.getElementById('reason').value.trim(),
+        is_emergency: emergencyCheckbox.checked,
+        urgency: emergencyCheckbox.checked ? 'Critical' : 'Normal'
+      };
+
+      try {
+        const res = await fetch('/api/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+
+        if (json.success && json.requestCode) {
+          showToast('Blood request submitted successfully!', 'success');
+          document.getElementById('request-form-card').style.display = 'none';
+          document.getElementById('success-req-card').style.display = 'block';
+          document.getElementById('assigned-code').innerText = json.requestCode;
+          document.getElementById('track-direct-btn').href = `track-request.html?code=${encodeURIComponent(json.requestCode)}`;
+        } else {
+          showToast(json.message || 'Submission failed', 'error');
+          submitBtn.disabled = false;
+        }
+      } catch (err) {
+        showToast('Network error while processing request', 'error');
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

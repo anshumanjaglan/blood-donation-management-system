@@ -1,0 +1,27 @@
+{
+  "name": "blood-donation-management-system",
+  "version": "1.0.0",
+  "description": "Centralized Blood Donation and Inventory Management System - Academic Minor Project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "blood-bank",
+    "blood-donation",
+    "healthcare",
+    "express",
+    "nodejs",
+    "mysql",
+    "minor-project"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
+  }
+}

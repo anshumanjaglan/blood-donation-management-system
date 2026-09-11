@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Blood Request Status | RaktDaan</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Timeline styles */
+    .timeline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      margin: 32px 0 24px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 10%;
+      right: 10%;
+      height: 4px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+    .timeline-step {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      width: 25%;
+    }
+    .timeline-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 0 2px #e2e8f0;
+    }
+    .timeline-step.active .timeline-dot {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+    .timeline-step.completed .timeline-dot {
+      background: var(--success);
+      color: #ffffff;
+      box-shadow: 0 0 0 2px var(--success);
+    }
+    .timeline-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .timeline-step.active .timeline-label {
+      color: var(--primary);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">RaktDaan</span>
+          <span class="brand-subtitle">Blood Donation Management</span>
+        </div>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="donors.html">Find Donors</a></li>
+        <li><a href="register-donor.html">Become a Donor</a></li>
+        <li><a href="request-blood.html">Request Blood</a></li>
+        <li><a href="track-request.html" class="active">Track Status</a></li>
+        <li><a href="hospital.html">Hospitals</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="request-blood.html" class="btn btn-danger btn-sm">Emergency Request</a>
+        <a href="admin-login.html" class="btn btn-outline btn-sm">Admin Portal</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding:40px 20px 60px;max-width:800px;">
+    <div class="section-header" style="text-align:left;margin-bottom:28px;">
+      <h1 style="font-size:2.2rem;font-weight:800;color:var(--text-main);">Live Request Tracker</h1>
+      <p style="color:var(--text-muted);font-size:1rem;margin-top:6px;">
+        Monitor the real-time fulfillment status of your blood requirement in our hospital &amp; donor network.
+      </p>
+    </div>
+
+    <!-- Search / Tracker Input -->
+    <div class="card">
+      <form id="track-form" style="display:flex;gap:12px;flex-wrap:wrap;">
+        <input type="text" id="track-input" class="form-control" style="flex:1;min-width:240px;height:44px;" placeholder="Enter Request Code (e.g. REQ-2026-001) or Phone Number" required>
+        <button type="submit" class="btn btn-primary" style="height:44px;min-width:140px;">
+          Track Status &rarr;
+        </button>
+      </form>
+    </div>
+
+    <!-- Tracking Results Area -->
+    <div id="results-area">
+      <!-- Injected via JS -->
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 Blood Donation Management System. Built for academic demonstration &amp; healthcare excellence.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeParam = urlParams.get('code');
+
+    if (codeParam) {
+      document.getElementById('track-input').value = codeParam;
+      trackCode(codeParam);
+    }
+
+    document.getElementById('track-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = document.getElementById('track-input').value.trim();
+      if (code) {
+        trackCode(code);
+      }
+    });
+
+    async function trackCode(code) {
+      const area = document.getElementById('results-area');
+      area.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);">Fetching request progress...</div>`;
+
+      try {
+        const res = await fetch(`/api/requests/track/${encodeURIComponent(code)}`);
+        const json = await res.json();
+
+        if (json.success && json.data && json.data.length > 0) {
+          renderTrackingResults(json.data);
+        } else {
+          area.innerHTML = `
+            <div class="card" style="text-align:center;padding:32px;">
+              <h3 style="color:var(--text-muted);margin-bottom:8px;">No matching blood request found</h3>
+              <p style="color:var(--text-muted);font-size:0.9rem;">
+                No request exists for "<strong>${code}</strong>". Please verify the Request ID or Registered Phone Number.
+              </p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        area.innerHTML = `
+          <div class="card" style="text-align:center;padding:32px;color:var(--danger);">
+            Network error. Unable to track blood request.
+          </div>
+        `;
+      }
+    }
+
+    function renderTrackingResults(requests) {
+      const area = document.getElementById('results-area');
+      area.innerHTML = requests.map(r => {
+        // Calculate timeline status
+        let step1 = 'completed';
+        let step2 = r.status !== 'Pending' ? 'completed' : 'active';
+        let step3 = (r.status === 'Donor_Matched' || r.status === 'Fulfilled') ? 'completed' : (r.status === 'Approved' ? 'active' : '');
+        let step4 = r.status === 'Fulfilled' ? 'completed' : (r.status === 'Donor_Matched' ? 'active' : '');
+
+        let statusBadgeClass = `badge-${(r.status || 'pending').toLowerCase()}`;
+
+        return `
+          <div class="card" style="margin-bottom:24px;">
+            <div class="card-header">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <span class="donor-blood-badge" style="width:48px;height:48px;font-size:1.2rem;">${r.blood_group}</span>
+                <div>
+                  <h3 style="margin:0;font-size:1.2rem;">${r.patient_name}</h3>
+                  <span style="font-size:0.8rem;color:var(--text-muted);">CODE: <strong>${r.request_code}</strong></span>
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <span class="badge ${statusBadgeClass}">${(r.status || 'Pending').replace('_', ' ')}</span>
+                ${r.is_emergency ? '<span class="emergency-badge" style="margin-left:6px;">EMERGENCY</span>' : ''}
+              </div>
+            </div>
+
+            <!-- Visual Timeline -->
+            <div class="timeline">
+              <div class="timeline-step ${step1}">
+                <div class="timeline-dot">&#10003;</div>
+                <div class="timeline-label">Submitted</div>
+              </div>
+              <div class="timeline-step ${step2}">
+                <div class="timeline-dot">${step2 === 'completed' ? '&#10003;' : '2'}</div>
+                <div class="timeline-label">Verified</div>
+              </div>
+              <div class="timeline-step ${step3}">
+                <div class="timeline-dot">${step3 === 'completed' ? '&#10003;' : '3'}</div>
+                <div class="timeline-label">Matched / Dispatched</div>
+              </div>
+              <div class="timeline-step ${step4}">
+                <div class="timeline-dot">${step4 === 'completed' ? '&#10003;' : '4'}</div>
+                <div class="timeline-label">Fulfilled</div>
+              </div>
+            </div>
+
+            <!-- Details Table -->
+            <div style="background:#f8fafc;padding:16px;border-radius:var(--radius-sm);border:1px solid var(--border);display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;font-size:0.875rem;">
+              <div>
+                <span style="color:var(--text-muted);font-size:0.75rem;display:block;">HOSPITAL & CITY</span>
+                <strong>${r.hospital_name} (${r.city})</strong>
+              </div>
+              <div>
+                <span style="color:var(--text-muted);font-size:0.75rem;display:block;">UNITS NEEDED</span>
+                <strong>${r.units_needed} Unit(s) of ${r.blood_group}</strong>
+              </div>
+              <div>
+                <span style="color:var(--text-muted);font-size:0.75rem;display:block;">CONTACT PERSON</span>
+                <strong>${r.contact_person} (${r.contact_phone})</strong>
+              </div>
+              <div>
+                <span style="color:var(--text-muted);font-size:0.75rem;display:block;">FULFILLMENT SOURCE</span>
+                <span style="color:${r.fulfillment_source ? 'var(--success)' : 'var(--text-muted)'};font-weight:600;">
+                  ${r.fulfillment_source || 'Awaiting Donor / Stock Allocation'}
+                </span>
+              </div>
+            </div>
+
+            ${r.notes ? `
+              <div style="margin-top:12px;font-size:0.85rem;color:var(--text-muted);">
+                <strong>Notes:</strong> ${r.notes}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

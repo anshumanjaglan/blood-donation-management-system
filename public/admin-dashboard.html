@@ -66,8 +66,8 @@
 
       <div class="sidebar-footer">
         <div>
-          <div class="sidebar-user-name" id="admin-user-display">Dr. Sameer Sen</div>
-          <div class="sidebar-user-role">Administrator</div>
+          <div class="sidebar-user-name" id="admin-user-display">Dr. Anshuman Jaglan</div>
+          <div class="sidebar-user-role">Chief Medical Administrator</div>
         </div>
         <button onclick="logoutAdmin()" class="btn btn-outline btn-sm" style="padding:4px 8px;font-size:0.75rem;color:#f87171;border-color:#ef4444;">
           Logout
@@ -83,7 +83,11 @@
           <p id="current-tab-subtitle">Real-time status of blood bank inventory, emergency requisitions, and donor activities.</p>
         </div>
         <div class="admin-actions">
-          <button class="btn btn-outline btn-sm" onclick="refreshDashboardData()">
+          <div id="live-telemetry-pill" style="display:flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;padding:6px 12px;border-radius:9999px;font-size:0.8rem;color:#166534;font-weight:600;">
+            <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 2px #bbf7d0;animation:pulse 2s infinite;"></span>
+            <span id="live-telemetry-text">Live Sync Active</span>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="triggerLiveRefresh()" title="Simulate incoming hospital activities & update records">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
             Refresh Live Data
           </button>

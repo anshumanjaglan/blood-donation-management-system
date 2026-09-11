@@ -31,7 +31,7 @@ CREATE TABLE `admins` (
 
 -- Seed Admin Account (Password: admin123)
 INSERT INTO `admins` (`id`, `username`, `password`, `name`, `email`, `role`) VALUES
-(1, 'admin', 'admin123', 'Medical Administrator', 'admin@bloodbank.org', 'Super Administrator'),
+(1, 'admin', 'admin123', 'Dr. Anshuman Jaglan', 'jaglananshuman@gmail.com', 'Chief Medical Administrator'),
 (2, 'staff', 'staff123', 'Blood Bank Staff Officer', 'staff@bloodbank.org', 'Staff');
 
 -- --------------------------------------------------------

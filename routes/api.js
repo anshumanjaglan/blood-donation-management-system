@@ -427,4 +427,124 @@ router.post('/hospitals', async (req, res) => {
   }
 });
 
+// ==========================================
+// 8. DYNAMIC LIVE SYNC & REAL-TIME ACTIVITY
+// ==========================================
+const SIM_DONORS = [
+  { name: 'Karan Mehra', gender: 'Male', age: 26, phone: '+91 9811002233', city: 'Delhi', district: 'South Delhi' },
+  { name: 'Suman Lata', gender: 'Female', age: 29, phone: '+91 9822334455', city: 'Noida', district: 'Sector 62' },
+  { name: 'Manish Rawat', gender: 'Male', age: 34, phone: '+91 9833445566', city: 'Gurugram', district: 'Cyber City' },
+  { name: 'Pooja Malhotra', gender: 'Female', age: 23, phone: '+91 9844556677', city: 'Delhi', district: 'West Delhi' },
+  { name: 'Siddharth Rao', gender: 'Male', age: 31, phone: '+91 9855667788', city: 'Faridabad', district: 'Sector 16' },
+  { name: 'Ananya Dixit', gender: 'Female', age: 25, phone: '+91 9866778899', city: 'Delhi', district: 'North Delhi' },
+  { name: 'Arjun Kapoor', gender: 'Male', age: 28, phone: '+91 9877889900', city: 'Noida', district: 'Sector 18' },
+  { name: 'Meenakshi Iyer', gender: 'Female', age: 27, phone: '+91 9888990011', city: 'Gurugram', district: 'DLF Phase 2' },
+  { name: 'Varun Batra', gender: 'Male', age: 30, phone: '+91 9899001122', city: 'Delhi', district: 'East Delhi' },
+  { name: 'Ritu Chaudhary', gender: 'Female', age: 24, phone: '+91 9911223344', city: 'Ghaziabad', district: 'Vasundhara' }
+];
+
+const SIM_HOSPITALS = [
+  'AIIMS Central Hospital',
+  'Max Super Speciality Hospital',
+  'Fortis Memorial Research Institute',
+  'Safdarjung Hospital',
+  'Apollo Indraprastha Hospital',
+  'Sir Ganga Ram Hospital',
+  'Medanta The Medicity'
+];
+
+const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+router.post('/live-sync', async (req, res) => {
+  try {
+    const eventType = Math.floor(Math.random() * 3); // 0, 1, or 2
+    let message = '';
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+
+    if (eventType === 0) {
+      // Event 0: Voluntary Blood Camp Donation & Inventory Increment
+      const bg = BLOOD_GROUPS[Math.floor(Math.random() * BLOOD_GROUPS.length)];
+      const donor = SIM_DONORS[Math.floor(Math.random() * SIM_DONORS.length)];
+      const units = 1;
+      const hospital = SIM_HOSPITALS[Math.floor(Math.random() * SIM_HOSPITALS.length)];
+
+      await db.addDonation({
+        donor_name: donor.name,
+        blood_group: bg,
+        units_donated: units,
+        donation_date: dateStr,
+        camp_or_hospital: `${hospital} Voluntary Camp`,
+        hemoglobin_level: (13.5 + (Math.random() * 2 - 1)).toFixed(1),
+        status: 'Tested_Safe'
+      });
+
+      await db.updateInventory(bg, units);
+      message = `⚡ Live Intake: ${donor.name} donated ${units} unit(s) of ${bg} at ${hospital}. Stock incremented.`;
+
+    } else if (eventType === 1) {
+      // Event 1: New Voluntary Donor Registration
+      const donorTemplate = SIM_DONORS[Math.floor(Math.random() * SIM_DONORS.length)];
+      const bg = BLOOD_GROUPS[Math.floor(Math.random() * BLOOD_GROUPS.length)];
+      const randomSuffix = Math.floor(100 + Math.random() * 900);
+      const uniqueName = `${donorTemplate.name}`;
+      const uniquePhone = `${donorTemplate.phone.slice(0, -3)}${randomSuffix}`;
+
+      await db.addDonor({
+        full_name: uniqueName,
+        blood_group: bg,
+        gender: donorTemplate.gender,
+        age: donorTemplate.age + Math.floor(Math.random() * 5 - 2),
+        phone: uniquePhone,
+        email: `${uniqueName.toLowerCase().replace(/\s+/g, '.')}${randomSuffix}@example.com`,
+        city: donorTemplate.city,
+        district: donorTemplate.district,
+        address: `${donorTemplate.district}, Block ${String.fromCharCode(65 + Math.floor(Math.random() * 6))}`,
+        pincode: '1100' + randomSuffix.toString().slice(0, 2),
+        last_donation_date: dateStr,
+        is_available: true,
+        status: 'Active'
+      });
+
+      message = `🟢 Live Registration: ${uniqueName} (${bg}) registered as an active voluntary donor in ${donorTemplate.city}.`;
+
+    } else {
+      // Event 2: New Incoming Clinical Blood Request
+      const bg = BLOOD_GROUPS[Math.floor(Math.random() * BLOOD_GROUPS.length)];
+      const hospital = SIM_HOSPITALS[Math.floor(Math.random() * SIM_HOSPITALS.length)];
+      const patient = SIM_DONORS[Math.floor(Math.random() * SIM_DONORS.length)].name;
+      const isEmerg = Math.random() > 0.4;
+      const units = Math.floor(Math.random() * 2) + 1;
+
+      const reqRes = await db.addRequest({
+        patient_name: patient,
+        blood_group: bg,
+        units_needed: units,
+        hospital_name: hospital,
+        city: 'Delhi',
+        contact_person: 'Dr. Coordinator',
+        contact_phone: '+91 98' + Math.floor(10000000 + Math.random() * 90000000),
+        urgency: isEmerg ? 'Critical' : 'Normal',
+        is_emergency: isEmerg,
+        required_by_date: dateStr,
+        reason: isEmerg ? 'Urgent surgical trauma support' : 'Scheduled medical treatment'
+      });
+
+      message = `${isEmerg ? '🚨 Critical Need:' : '📋 New Request:'} ${units} unit(s) of ${bg} requested by ${hospital} (${reqRes.request_code}).`;
+    }
+
+    const stats = await db.getStats();
+    return res.json({
+      success: true,
+      message,
+      timestamp: now.toLocaleTimeString(),
+      stats
+    });
+  } catch (err) {
+    console.error('Live sync error:', err);
+    return res.status(500).json({ success: false, message: 'Simulation sync error' });
+  }
+});
+
 module.exports = router;
+

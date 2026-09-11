@@ -14,7 +14,7 @@ if (!fs.existsSync(DATA_DIR)) {
 // Initial default seed data for JSON store fallback
 const initialData = {
   admins: [
-    { id: 1, username: 'admin', password: 'password123', name: 'Dr. Sameer Sen', email: 'admin@bloodbank.org', role: 'Super Administrator' },
+    { id: 1, username: 'admin', password: 'password123', name: 'Dr. Anshuman Jaglan', email: 'jaglananshuman@gmail.com', role: 'Chief Medical Administrator' },
     { id: 2, staff: 'staff', password: 'password123', name: 'Staff Member', email: 'staff@bloodbank.org', role: 'Staff' }
   ],
   blood_inventory: [

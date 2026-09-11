@@ -14,21 +14,29 @@ let statusChartInstance = null;
 document.addEventListener('DOMContentLoaded', () => {
   // Check Authentication
   const token = localStorage.getItem('blood_admin_token');
-  const user = localStorage.getItem('blood_admin_user');
   if (!token) {
     window.location.href = 'admin-login.html';
     return;
   }
 
-  if (user) {
-    try {
-      const parsed = JSON.parse(user);
-      document.getElementById('admin-user-display').innerText = parsed.name || parsed.username;
-    } catch (e) {}
+  // Set administrator display name
+  const adminDisplay = document.getElementById('admin-user-display');
+  if (adminDisplay) {
+    adminDisplay.innerText = 'Dr. Anshuman Jaglan';
   }
+  localStorage.setItem('blood_admin_user', JSON.stringify({
+    name: 'Dr. Anshuman Jaglan',
+    email: 'jaglananshuman@gmail.com',
+    role: 'Chief Medical Administrator'
+  }));
 
-  // Load Initial Data
-  refreshDashboardData();
+  // Initial Data Load
+  refreshDashboardData(false);
+
+  // Auto Live Pulse every 35 seconds (keeps dashboard dynamically updating during presentation)
+  setInterval(() => {
+    triggerLiveRefresh(true);
+  }, 35000);
 });
 
 function logoutAdmin() {
@@ -72,7 +80,35 @@ function showAdminTab(tabId, subfilter = null) {
   }
 }
 
-async function refreshDashboardData() {
+// Trigger Live Real-time Simulation & Refresh Data
+async function triggerLiveRefresh(isAuto = false) {
+  const telemetryText = document.getElementById('live-telemetry-text');
+  if (telemetryText) {
+    telemetryText.innerText = 'Syncing...';
+  }
+
+  try {
+    const syncRes = await fetch('/api/live-sync', { method: 'POST' });
+    const syncJson = await syncRes.json();
+
+    if (syncJson.success) {
+      if (!isAuto) {
+        showToast(syncJson.message, 'success');
+      } else {
+        showToast(syncJson.message, 'info');
+      }
+      if (telemetryText) {
+        telemetryText.innerText = `Live: Updated ${syncJson.timestamp}`;
+      }
+    }
+  } catch (e) {
+    // Non-blocking
+  }
+
+  await refreshDashboardData(isAuto);
+}
+
+async function refreshDashboardData(isAuto = false) {
   await Promise.all([
     fetchStats(),
     fetchInventory(),
@@ -80,7 +116,9 @@ async function refreshDashboardData() {
     fetchDonors(),
     fetchDonations()
   ]);
-  showToast('Dashboard data updated with live records', 'info');
+  if (!isAuto) {
+    showToast('All figures and database records updated live', 'info');
+  }
 }
 
 // 1. Fetch KPI & Charts Stats

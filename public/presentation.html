@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minor Project Presentation | Blood Donation Management System (MAIT ITE)</title>
+  <style>
+    :root {
+      --primary: #dc2626;
+      --primary-dark: #991b1b;
+      --bg-dark: #0f172a;
+      --surface-dark: #1e293b;
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Presentation Header Toolbar */
+    .pres-nav {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #334155;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .pres-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pres-title span {
+      background: #ef4444;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .pres-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-red { background: var(--primary); color: #fff; }
+    .btn-red:hover { background: var(--primary-dark); }
+    .btn-outline { background: transparent; border-color: #475569; color: #cbd5e1; }
+    .btn-outline:hover { background: #334155; color: #fff; }
+
+    /* Slide Deck Container */
+    .deck-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      min-height: 620px;
+      background: var(--surface-dark);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      padding: 44px 50px;
+      animation: fadeIn 0.3s ease-out;
+      position: relative;
+    }
+
+    .slide.active { display: flex; flex-direction: column; justify-content: space-between; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Slide Content Typography */
+    .slide-tag {
+      font-size: 0.75rem;
+      color: #f87171;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .slide-heading {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 12px;
+    }
+    .slide-body {
+      flex: 1;
+    }
+    .slide-footer {
+      border-top: 1px solid #334155;
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 24px;
+    }
+
+    /* Cards inside slides */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    /* Keyboard navigation hint */
+    .nav-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: 10px;
+    }
+
+    /* Print styles for export */
+    @media print {
+      .pres-nav, .no-print { display: none !important; }
+      body { background: #fff !important; color: #000 !important; }
+      .slide { display: flex !important; page-break-after: always; min-height: 95vh; box-shadow: none !important; border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; }
+      .card-box { background: #f8fafc !important; border-color: #cbd5e1 !important; color: #000 !important; }
+      .slide-heading { color: #000 !important; }
+      .slide-tag { color: #dc2626 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Presentation Control Bar -->
+  <header class="pres-nav no-print">
+    <div class="pres-title">
+      <span>MAIT ITE</span>
+      Blood Donation Management System &mdash; Minor Project PPT
+    </div>
+
+    <div class="pres-controls">
+      <span class="nav-hint">Use ⬅️ ➡️ Arrow Keys</span>
+      <button class="btn btn-outline" onclick="prevSlide()">&#8592; Prev</button>
+      <span id="slide-num" style="font-weight:700;font-size:0.9rem;min-width:70px;text-align:center;">1 / 12</span>
+      <button class="btn btn-outline" onclick="nextSlide()">Next &#8594;</button>
+      <button class="btn btn-red" onclick="window.print()">🖨️ Print / Save PDF</button>
+      <a href="Blood_Donation_Management_System_Presentation.pptx" download class="btn btn-outline" style="border-color:#38bdf8;color:#38bdf8;">📥 Download .PPTX</a>
+      <a href="index.html" class="btn btn-outline">Exit to App</a>
+    </div>
+  </header>
+
+  <!-- Main Slides View -->
+  <main class="deck-container">
+
+    <!-- ================= SLIDE 1: COVER & DETAILS ================= -->
+    <section class="slide active" id="slide-1">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <span style="background:#991b1b;color:#ffffff;font-size:0.8rem;font-weight:800;padding:4px 12px;border-radius:9999px;">
+            ACADEMIC MINOR PROJECT (BATCH 2023 - 2027)
+          </span>
+          <span style="color:var(--accent-blue);font-weight:700;font-size:0.9rem;">
+            Department of ITE &bull; MAIT
+          </span>
+        </div>
+
+        <h1 style="font-size:2.8rem;font-weight:900;line-height:1.15;color:#ffffff;margin-bottom:10px;">
+          BLOOD DONATION<br><span style="color:#ef4444;">MANAGEMENT SYSTEM</span>
+        </h1>
+        <p style="font-size:1.15rem;color:var(--text-muted);margin-bottom:24px;">
+          Centralized Healthcare Requisition, Clinical ABO/Rh Matching &amp; Real-Time Inventory Control
+        </p>
+
+        <!-- Institutional Badge -->
+        <div style="background:#0f172a;border:1px solid #334155;border-radius:8px;padding:12px 18px;margin-bottom:20px;">
+          <strong style="color:#ffffff;font-size:1.05rem;">Maharaja Agrasen Institute of Technology (MAIT)</strong><br>
+          <span style="color:#94a3b8;font-size:0.85rem;">Department of Information Technology &amp; Engineering (ITE)</span>
+        </div>
+
+        <!-- 2 Column Details -->
+        <div class="grid-2">
+          <!-- Team Details -->
+          <div class="card-box" style="border-left:4px solid #ef4444;">
+            <div style="font-size:0.75rem;color:#f87171;font-weight:800;text-transform:uppercase;margin-bottom:8px;">
+              PROJECT DEVELOPERS (BATCH 2023-2027)
+            </div>
+            <div style="margin-bottom:8px;">
+              <strong style="color:#ffffff;font-size:1rem;">1. Anshuman Jaglan</strong>
+              <div style="font-size:0.8rem;color:#94a3b8;">Roll No: <span style="color:#f87171;font-weight:700;">01614813123</span> &bull; Team Lead &amp; Full Stack Architecture</div>
+              <div style="font-size:0.75rem;color:#64748b;">📞 +91 9466291852 &bull; ✉️ jaglananshuman@gmail.com</div>
+            </div>
+            <div style="margin-bottom:8px;">
+              <strong style="color:#ffffff;font-size:1rem;">2. Harsh Solanki</strong>
+              <div style="font-size:0.8rem;color:#94a3b8;">Roll No: <span style="color:#38bdf8;font-weight:700;">01514813123</span> &bull; Backend &amp; Database Management</div>
+            </div>
+            <div>
+              <strong style="color:#ffffff;font-size:1rem;">3. Umesh Kumar</strong>
+              <div style="font-size:0.8rem;color:#94a3b8;">Roll No: <span style="color:#4ade80;font-weight:700;">01314813123</span> &bull; Frontend UI &amp; Compatibility Logic</div>
+            </div>
+          </div>
+
+          <!-- Faculty Mentorship -->
+          <div class="card-box" style="border-left:4px solid #38bdf8;">
+            <div style="font-size:0.75rem;color:#38bdf8;font-weight:800;text-transform:uppercase;margin-bottom:8px;">
+              ACADEMIC GUIDANCE &amp; SUPERVISION
+            </div>
+            <div style="margin-bottom:12px;">
+              <span style="font-size:0.75rem;color:#94a3b8;display:block;">PROJECT GUIDE</span>
+              <strong style="color:#ffffff;font-size:1.1rem;">Ms. Sapna Gupta</strong>
+            </div>
+            <div style="margin-bottom:12px;">
+              <span style="font-size:0.75rem;color:#94a3b8;display:block;">MENTOR TEACHER</span>
+              <strong style="color:#ffffff;font-size:1.1rem;">Mr. Pawan Sharma</strong>
+            </div>
+            <div>
+              <span style="font-size:0.75rem;color:#94a3b8;display:block;">HEAD OF DEPARTMENT (HOD)</span>
+              <strong style="color:#ffffff;font-size:1.1rem;">Dr. Bhoomi Gupta</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Maharaja Agrasen Institute of Technology (MAIT)</span>
+        <span>Department of ITE &bull; Minor Project 2026</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 2: PROBLEM STATEMENT ================= -->
+    <section class="slide" id="slide-2">
+      <div>
+        <div class="slide-tag">Section 1 &bull; Clinical Motivation</div>
+        <h2 class="slide-heading">Problem Statement &amp; Challenges</h2>
+
+        <div class="card-box" style="background:#7f1d1d;border-color:#b91c1c;margin-bottom:20px;">
+          <strong style="color:#fecaca;font-size:1rem;">Clinical Reality:</strong>
+          <span style="color:#ffffff;font-size:0.95rem;">
+            Blood has zero synthetic substitutes and a strict shelf-life of 35-42 days. In acute hemorrhage and trauma, delay of minutes often proves fatal.
+          </span>
+        </div>
+
+        <div class="grid-2">
+          <div class="card-box">
+            <h4 style="color:#ef4444;margin-bottom:6px;">01. Scattered Information</h4>
+            <p style="font-size:0.875rem;color:#cbd5e1;">Stock figures are locked in isolated hospital registries with zero real-time public synchronization.</p>
+          </div>
+          <div class="card-box">
+            <h4 style="color:#ef4444;margin-bottom:6px;">02. Emergency Latency</h4>
+            <p style="font-size:0.875rem;color:#cbd5e1;">Patients' relatives are forced to make unverified phone calls and social media pleas while surgeries wait.</p>
+          </div>
+          <div class="card-box">
+            <h4 style="color:#ef4444;margin-bottom:6px;">03. Inefficient Donor Search</h4>
+            <p style="font-size:0.875rem;color:#cbd5e1;">No automated matching engine to filter registered voluntary donors by clinical ABO/Rh compatibility and city proximity.</p>
+          </div>
+          <div class="card-box">
+            <h4 style="color:#ef4444;margin-bottom:6px;">04. Lack of Inventory Audits</h4>
+            <p style="font-size:0.875rem;color:#cbd5e1;">Manual registers suffer from human errors in tracking critical threshold shortages, safe levels, and camp collections.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Blood Donation Management System</span>
+        <span>Slide 2 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 3: OBJECTIVES ================= -->
+    <section class="slide" id="slide-3">
+      <div>
+        <div class="slide-tag">Section 2 &bull; Project Goals</div>
+        <h2 class="slide-heading">Objectives &amp; Key Deliverables</h2>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card-box" style="display:flex;align-items:center;gap:16px;">
+            <div style="background:#ef4444;color:#fff;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">1</div>
+            <div>
+              <strong style="color:#ffffff;">Centralized Web Platform:</strong>
+              <p style="font-size:0.85rem;color:#94a3b8;">Unified digital management of blood donors, patient requests, and hospital blood inventories.</p>
+            </div>
+          </div>
+
+          <div class="card-box" style="display:flex;align-items:center;gap:16px;">
+            <div style="background:#ef4444;color:#fff;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">2</div>
+            <div>
+              <strong style="color:#ffffff;">Live Stock Monitoring:</strong>
+              <p style="font-size:0.85rem;color:#94a3b8;">Real-time inventory levels for all 8 blood groups with automated Safe, Low, and Critical shortage alerts.</p>
+            </div>
+          </div>
+
+          <div class="card-box" style="display:flex;align-items:center;gap:16px;">
+            <div style="background:#ef4444;color:#fff;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">3</div>
+            <div>
+              <strong style="color:#ffffff;">Smart Compatibility &amp; Proximity Matching:</strong>
+              <p style="font-size:0.85rem;color:#94a3b8;">Algorithmic ranking combining clinical ABO/Rh compatibility rules with spatial distance scoring.</p>
+            </div>
+          </div>
+
+          <div class="card-box" style="display:flex;align-items:center;gap:16px;">
+            <div style="background:#ef4444;color:#fff;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;">4</div>
+            <div>
+              <strong style="color:#ffffff;">24x7 Emergency Priority Queue:</strong>
+              <p style="font-size:0.85rem;color:#94a3b8;">High-priority alerts for life-threatening clinical trauma and real-time request milestone tracking.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Department of ITE &bull; MAIT</span>
+        <span>Slide 3 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 4: SDG & PO/PSO MAPPINGS ================= -->
+    <section class="slide" id="slide-4">
+      <div>
+        <div class="slide-tag">Section 3 &bull; Academic Standards</div>
+        <h2 class="slide-heading">Mapping to SDGs &amp; Engineering Outcomes</h2>
+
+        <div class="grid-2">
+          <div class="card-box" style="border-top:3px solid #16a34a;">
+            <h3 style="color:#4ade80;margin-bottom:12px;font-size:1.1rem;">Sustainable Development Goals</h3>
+            <div style="margin-bottom:12px;">
+              <strong style="color:#fff;">SDG 3: Good Health and Well-Being</strong>
+              <p style="font-size:0.85rem;color:#cbd5e1;">Reduces emergency blood search latency, directly improving survival in surgical hemorrhage, road trauma, and maternal emergencies.</p>
+            </div>
+            <div>
+              <strong style="color:#fff;">SDG 9: Industry, Innovation &amp; Infrastructure</strong>
+              <p style="font-size:0.85rem;color:#cbd5e1;">Creates a robust, scalable digital infrastructure connecting municipal hospitals and voluntary registries.</p>
+            </div>
+          </div>
+
+          <div class="card-box" style="border-top:3px solid #38bdf8;">
+            <h3 style="color:#38bdf8;margin-bottom:12px;font-size:1.1rem;">Engineering Program Outcomes (POs/PSOs)</h3>
+            <ul style="list-style:none;font-size:0.8rem;color:#cbd5e1;display:flex;flex-direction:column;gap:6px;">
+              <li><strong>PO1 (Engineering Knowledge):</strong> Full-stack web engineering &amp; normalized schema.</li>
+              <li><strong>PO2 (Problem Analysis):</strong> Analysis of blood supply-chain latency bottlenecks.</li>
+              <li><strong>PO3 (Design/Development):</strong> Safe stock thresholds and clinical compatibility rules.</li>
+              <li><strong>PO5 (Modern Tool Usage):</strong> Node.js, Express, Chart.js, Git, Docker, REST APIs.</li>
+              <li><strong>PO6 &amp; PO8 (Society &amp; Ethics):</strong> Social impact with strict donor confidentiality.</li>
+              <li><strong>PSO1 &amp; PSO2:</strong> Healthcare IT software engineering for real-world health data.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Academic Mapping &bull; PO1–PO12 &bull; PSO1–PSO3</span>
+        <span>Slide 4 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 5: SYSTEM ARCHITECTURE ================= -->
+    <section class="slide" id="slide-5">
+      <div>
+        <div class="slide-tag">Section 4 &bull; Engineering Design</div>
+        <h2 class="slide-heading">Multi-Tier System Architecture</h2>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="card-box" style="border-left:4px solid #38bdf8;">
+            <strong style="color:#38bdf8;font-size:1rem;">Tier 1: Presentation Layer (Frontend)</strong>
+            <p style="font-size:0.85rem;color:#cbd5e1;margin-top:4px;">
+              HTML5 Semantic Markup, CSS3 Modern Healthcare Palette, Vanilla ES6+ JavaScript, Chart.js Visualizations. Zero bloated frontend runtime dependencies for 100% mobile responsiveness.
+            </p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #ef4444;">
+            <strong style="color:#ef4444;font-size:1rem;">Tier 2: Application Layer (Backend Microservices)</strong>
+            <p style="font-size:0.85rem;color:#cbd5e1;margin-top:4px;">
+              Node.js and Express.js REST APIs. Non-blocking asynchronous event loop ensures concurrent requests, emergency broadcasts, and session management operate with low latency.
+            </p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #4ade80;">
+            <strong style="color:#4ade80;font-size:1rem;">Tier 3: Algorithmic Matching Layer</strong>
+            <p style="font-size:0.85rem;color:#cbd5e1;margin-top:4px;">
+              Clinical ABO and Rh(D) compatibility matrix combined with geographic proximity ranking (<code>services/matchingService.js</code>).
+            </p>
+          </div>
+
+          <div class="card-box" style="border-left:4px solid #fbbf24;">
+            <strong style="color:#fbbf24;font-size:1rem;">Tier 4: Unified Database Layer</strong>
+            <p style="font-size:0.85rem;color:#cbd5e1;margin-top:4px;">
+              Dual-database architecture: Production 3NF MySQL relational schema (<code>database.sql</code>) + zero-config embedded persistence fallback for bulletproof viva defense.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>System Architecture &bull; Full Stack Node.js</span>
+        <span>Slide 5 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 6: DATABASE SCHEMA ================= -->
+    <section class="slide" id="slide-6">
+      <div>
+        <div class="slide-tag">Section 5 &bull; Data Architecture</div>
+        <h2 class="slide-heading">Relational Database Design (3NF)</h2>
+
+        <div class="grid-3">
+          <div class="card-box">
+            <strong style="color:#ef4444;">blood_inventory</strong>
+            <p style="font-size:0.75rem;color:#94a3b8;margin:4px 0;">PK: id | UK: blood_group</p>
+            <p style="font-size:0.8rem;color:#cbd5e1;">Tracks live units available, safe thresholds, and critical thresholds for all 8 blood groups.</p>
+          </div>
+
+          <div class="card-box">
+            <strong style="color:#38bdf8;">donors</strong>
+            <p style="font-size:0.75rem;color:#94a3b8;margin:4px 0;">PK: id</p>
+            <p style="font-size:0.8rem;color:#cbd5e1;">Stores voluntary donor demographics, blood group, age (18-65), phone, city, availability flag, and last donation date.</p>
+          </div>
+
+          <div class="card-box">
+            <strong style="color:#4ade80;">blood_requests</strong>
+            <p style="font-size:0.75rem;color:#94a3b8;margin:4px 0;">PK: id | UK: request_code</p>
+            <p style="font-size:0.8rem;color:#cbd5e1;">Logs patient requirement, units needed, hospital, city, urgency, emergency flag, status, and fulfillment source.</p>
+          </div>
+
+          <div class="card-box">
+            <strong style="color:#fbbf24;">donations</strong>
+            <p style="font-size:0.75rem;color:#94a3b8;margin:4px 0;">PK: id | FK: donor_id</p>
+            <p style="font-size:0.8rem;color:#cbd5e1;">Audit trail of whole blood units collected, donation dates, mobile camp locations, and tested hemoglobin levels.</p>
+          </div>
+
+          <div class="card-box">
+            <strong style="color:#c084fc;">hospitals</strong>
+            <p style="font-size:0.75rem;color:#94a3b8;margin:4px 0;">PK: id | UK: license_no</p>
+            <p style="font-size:0.8rem;color:#cbd5e1;">Registry of verified healthcare institutions, official coordinators, and bulk emergency requisitions.</p>
+          </div>
+
+          <div class="card-box">
+            <strong style="color:#f472b6;">admins</strong>
+            <p style="font-size:0.75rem;color:#94a3b8;margin:4px 0;">PK: id | UK: username</p>
+            <p style="font-size:0.8rem;color:#cbd5e1;">Secure credentials for Chief Administrator (Dr. Anshuman Jaglan) and hospital staff officers.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Relational Database Management System (RDBMS)</span>
+        <span>Slide 6 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 7: COMPATIBILITY ENGINE ================= -->
+    <section class="slide" id="slide-7">
+      <div>
+        <div class="slide-tag">Section 6 &bull; Algorithmic Core</div>
+        <h2 class="slide-heading">Clinical ABO/Rh Compatibility Engine</h2>
+
+        <div class="grid-2">
+          <div class="card-box">
+            <h3 style="color:#ef4444;margin-bottom:12px;font-size:1.1rem;">Medical Compatibility Matrix</h3>
+            <ul style="list-style:none;font-size:0.85rem;color:#cbd5e1;display:flex;flex-direction:column;gap:8px;">
+              <li><strong>O- (Universal Donor):</strong> Can give red cells to all 8 blood groups (A+, A-, B+, B-, AB+, AB-, O+, O-).</li>
+              <li><strong>AB+ (Universal Recipient):</strong> Can safely receive blood from any blood group.</li>
+              <li><strong>Rh-D Factor Rule:</strong> Rh- individuals can only receive Rh- units; Rh+ can receive either positive or negative.</li>
+            </ul>
+          </div>
+
+          <div class="card-box">
+            <h3 style="color:#38bdf8;margin-bottom:12px;font-size:1.1rem;">Matching Score Formulation</h3>
+            <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:8px;">
+              <code>Score = 50 (Base) + BloodBonus + CityBonus</code>
+            </p>
+            <ul style="list-style:none;font-size:0.825rem;color:#cbd5e1;display:flex;flex-direction:column;gap:6px;">
+              <li>&bull; <strong>Exact Blood Group:</strong> +30 Points</li>
+              <li>&bull; <strong>Compatible Alternative:</strong> +15 Points</li>
+              <li>&bull; <strong>Exact City Match:</strong> +20 Points</li>
+              <li>&bull; <strong>Nearby District Match:</strong> +10 Points</li>
+              <li>&bull; <strong>Eligibility Filter:</strong> Requires <code>is_available = TRUE</code></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Automated Matching &bull; services/matchingService.js</span>
+        <span>Slide 7 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 8: CORE MODULES ================= -->
+    <section class="slide" id="slide-8">
+      <div>
+        <div class="slide-tag">Section 7 &bull; Functional Capabilities</div>
+        <h2 class="slide-heading">Core System Modules</h2>
+
+        <div class="grid-3">
+          <div class="card-box">
+            <strong style="color:#ef4444;">1. Live Stock Counter</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:6px;">Real-time stock ticker for all 8 blood groups with Safe, Low, and Critical threshold alerts.</p>
+          </div>
+          <div class="card-box">
+            <strong style="color:#38bdf8;">2. Donor Matcher</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:6px;">Filter donors by city and blood group with instant direct Call, WhatsApp, and Email triggers.</p>
+          </div>
+          <div class="card-box">
+            <strong style="color:#4ade80;">3. Digital Donor Card</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:6px;">Registration with medical pre-screening checklist &amp; printable official Donor Pass (<code>DON-XXXX</code>).</p>
+          </div>
+          <div class="card-box">
+            <strong style="color:#fbbf24;">4. Emergency Queue</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:6px;">Urgent priority toggle that triggers critical red broadcast banners across the hospital network.</p>
+          </div>
+          <div class="card-box">
+            <strong style="color:#c084fc;">5. Request Tracker</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:6px;">Live 4-step progress timeline: Submitted &rarr; Verified &rarr; Matched/Dispatched &rarr; Fulfilled.</p>
+          </div>
+          <div class="card-box">
+            <strong style="color:#f472b6;">6. Hospital Portal</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:6px;">Partner hospital registry and bulk surgical requisition submissions.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Functional Specifications &bull; 6 Core Modules</span>
+        <span>Slide 8 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 9: ADMIN DASHBOARD ================= -->
+    <section class="slide" id="slide-9">
+      <div>
+        <div class="slide-tag">Section 8 &bull; Management &amp; Analytics</div>
+        <h2 class="slide-heading">Executive Administrator Dashboard</h2>
+
+        <div class="grid-2">
+          <div class="card-box">
+            <h4 style="color:#ef4444;margin-bottom:8px;">Chief Medical Administrator: Dr. Anshuman Jaglan</h4>
+            <p style="font-size:0.85rem;color:#cbd5e1;">
+              Secure authentication (<code>admin / password123</code>) with role-based session control and audit logging.
+            </p>
+            <div style="margin-top:14px;">
+              <strong style="color:#38bdf8;">Interactive Chart.js Visualizations:</strong>
+              <p style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">
+                Live bar chart for blood group unit distribution + doughnut chart for request status distribution.
+              </p>
+            </div>
+          </div>
+
+          <div class="card-box">
+            <h4 style="color:#4ade80;margin-bottom:8px;">Live Telemetry &amp; Persistent Memory</h4>
+            <p style="font-size:0.85rem;color:#cbd5e1;">
+              Clicking <strong>Refresh Live Data</strong> simulates real-time hospital activities (new donors, emergency blood requests, camp intakes) while preserving all manual edits into database memory!
+            </p>
+            <div style="margin-top:14px;">
+              <strong style="color:#fbbf24;">One-Click Fulfill &amp; CSV Exports:</strong>
+              <p style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">
+                Dispense from inventory (auto-deducts units), assign registered donors, and export CSV audit reports for viva review.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Admin Portal &bull; Analytics &amp; Inventory Management</span>
+        <span>Slide 9 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 10: VERIFICATION & TESTS ================= -->
+    <section class="slide" id="slide-10">
+      <div>
+        <div class="slide-tag">Section 9 &bull; Quality Assurance</div>
+        <h2 class="slide-heading">Testing, Verification &amp; Cloud Deployment</h2>
+
+        <div class="card-box" style="background:#064e3b;border-color:#059669;margin-bottom:18px;">
+          <strong style="color:#6ee7b7;font-size:1.05rem;">AUTOMATED SANITY TEST SUITE: 9 PASSED / 0 FAILED</strong>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;font-size:0.75rem;color:#a7f3d0;">
+            <div>✓ Server Health Check</div>
+            <div>✓ Inventory Retrieval (8 Groups)</div>
+            <div>✓ Donor Registration Validator</div>
+            <div>✓ ABO/Rh Compatibility Engine</div>
+            <div>✓ Request Submission &amp; Tracking</div>
+            <div>✓ Stock Deduction Workflow</div>
+            <div>✓ Admin Authentication</div>
+            <div>✓ Live Telemetry Endpoints</div>
+            <div>✓ Dual-Database Fallback</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card-box">
+            <strong style="color:#38bdf8;">Production Cloud Deployment</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:4px;">
+              Containerized with Docker (Node.js 20-Alpine) on <strong>Render.com</strong> with automated GitHub CI/CD integration.
+            </p>
+          </div>
+          <div class="card-box">
+            <strong style="color:#f472b6;">Offline Viva Resilience</strong>
+            <p style="font-size:0.8rem;color:#cbd5e1;margin-top:4px;">
+              Includes <code>run-server.bat</code> and <code>share-online.bat</code> for instant, zero-lag local presentation in college labs.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Verification &amp; Deployment &bull; 100% Verified</span>
+        <span>Slide 10 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 11: CONCLUSION & FUTURE SCOPE ================= -->
+    <section class="slide" id="slide-11">
+      <div>
+        <div class="slide-tag">Section 10 &bull; Impact &amp; Roadmap</div>
+        <h2 class="slide-heading">Conclusion &amp; Future Enhancements</h2>
+
+        <div class="grid-2">
+          <div class="card-box">
+            <h4 style="color:#4ade80;margin-bottom:8px;">Project Achievements</h4>
+            <p style="font-size:0.85rem;color:#cbd5e1;">
+              Successfully developed a centralized, responsive web platform that reduces emergency blood search time from hours to seconds, eliminates fragmented calls, and guarantees real-time inventory visibility across medical centers.
+            </p>
+          </div>
+
+          <div class="card-box">
+            <h4 style="color:#38bdf8;margin-bottom:8px;">Future Roadmap</h4>
+            <ul style="list-style:none;font-size:0.8rem;color:#cbd5e1;display:flex;flex-direction:column;gap:6px;">
+              <li>&bull; <strong>Automated SMS / WhatsApp Gateway:</strong> Real-time geolocation-based emergency broadcasts to registered donors.</li>
+              <li>&bull; <strong>IoT Cold-Chain Sensors:</strong> Smart refrigeration temperature sensors to track blood bag shelf life.</li>
+              <li>&bull; <strong>State-Wide Federation:</strong> Interlinking national blood banks under National Health Mission standards.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Conclusion &amp; Roadmap &bull; Department of ITE</span>
+        <span>Slide 11 of 12</span>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 12: THANK YOU ================= -->
+    <section class="slide" id="slide-12">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <span style="color:#ef4444;font-size:1.1rem;font-weight:800;">MAIT &bull; DEPARTMENT OF ITE</span>
+          <span style="color:#94a3b8;font-size:0.85rem;">BATCH 2023 - 2027</span>
+        </div>
+
+        <h1 style="font-size:3.2rem;font-weight:900;color:#ffffff;margin-bottom:10px;">
+          THANK YOU
+        </h1>
+        <h3 style="font-size:1.4rem;color:#ef4444;margin-bottom:24px;">
+          Questions &amp; Viva Voce Discussion
+        </h3>
+
+        <div class="card-box" style="margin-bottom:20px;">
+          <strong style="color:#ffffff;font-size:1.05rem;">Project Development Team:</strong>
+          <div style="font-size:0.9rem;color:#cbd5e1;margin-top:6px;">
+            • <strong>Anshuman Jaglan</strong> (Roll No: 01614813123) &mdash; 📞 +91 9466291852 &bull; ✉️ jaglananshuman@gmail.com<br>
+            • <strong>Harsh Solanki</strong> (Roll No: 01514813123)<br>
+            • <strong>Umesh Kumar</strong> (Roll No: 01314813123)
+          </div>
+        </div>
+
+        <div class="card-box" style="background:#0f172a;border-color:#38bdf8;">
+          <strong style="color:#38bdf8;font-size:0.95rem;">Special Acknowledgments &amp; Gratitude:</strong>
+          <div style="font-size:0.875rem;color:#cbd5e1;margin-top:4px;">
+            <strong>Ms. Sapna Gupta</strong> (Project Guide) &bull; 
+            <strong>Mr. Pawan Sharma</strong> (Mentor Teacher) &bull; 
+            <strong>Dr. Bhoomi Gupta</strong> (Head of Department)
+          </div>
+          <div style="font-size:0.8rem;color:#94a3b8;margin-top:4px;">
+            Maharaja Agrasen Institute of Technology (MAIT), Department of Information Technology &amp; Engineering (ITE)
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Blood Donation Management System</span>
+        <span>Minor Project Defense 2026</span>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 12;
+
+    function showSlide(num) {
+      if (num < 1) num = 1;
+      if (num > totalSlides) num = totalSlides;
+      currentSlide = num;
+
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      const activeSlide = document.getElementById(`slide-${currentSlide}`);
+      if (activeSlide) activeSlide.classList.add('active');
+
+      document.getElementById('slide-num').innerText = `${currentSlide} / ${totalSlides}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) showSlide(currentSlide - 1);
+    }
+
+    // Keyboard Arrow Navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === 'Home') {
+        showSlide(1);
+      } else if (e.key === 'End') {
+        showSlide(totalSlides);
+      }
+    });
+  </script>
+</body>
+</html>

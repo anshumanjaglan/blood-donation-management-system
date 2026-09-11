@@ -29,10 +29,10 @@
     {
       "id": 2,
       "blood_group": "A-",
-      "units_available": 8,
+      "units_available": 9,
       "safe_threshold": 8,
       "critical_threshold": 3,
-      "last_updated": "2026-09-11T18:05:03.631Z"
+      "last_updated": "2026-09-11T19:49:01.797Z"
     },
     {
       "id": 3,
@@ -227,6 +227,24 @@
       "status": "Active",
       "total_donations": 1,
       "created_at": "2026-09-11T18:05:03.631Z"
+    },
+    {
+      "id": 9,
+      "created_at": "2026-09-11T19:48:31.782Z",
+      "full_name": "Arjun Kapoor",
+      "blood_group": "A-",
+      "gender": "Male",
+      "age": 27,
+      "phone": "+91 9877889748",
+      "email": "arjun.kapoor748@example.com",
+      "city": "Noida",
+      "district": "Sector 18",
+      "address": "Sector 18, Block B",
+      "pincode": "110074",
+      "last_donation_date": "2026-09-11",
+      "is_available": true,
+      "status": "Active",
+      "total_donations": 1
     }
   ],
   "blood_requests": [
@@ -324,6 +342,44 @@
       "reason": "",
       "status": "Fulfilled",
       "fulfillment_source": "Dispatched from Blood Bank Inventory (1 units of A+)"
+    },
+    {
+      "id": 6,
+      "created_at": "2026-09-11T19:48:36.366Z",
+      "request_code": "REQ-2026-6366",
+      "patient_name": "Karan Mehra",
+      "blood_group": "AB-",
+      "units_needed": 2,
+      "hospital_name": "Fortis Memorial Research Institute",
+      "city": "Delhi",
+      "contact_person": "Dr. Coordinator",
+      "contact_phone": "+91 9823998546",
+      "contact_email": null,
+      "urgency": "Critical",
+      "is_emergency": true,
+      "required_by_date": "2026-09-11",
+      "reason": "Urgent surgical trauma support",
+      "status": "Pending",
+      "fulfillment_source": null
+    },
+    {
+      "id": 7,
+      "created_at": "2026-09-11T19:48:46.154Z",
+      "request_code": "REQ-2026-6154",
+      "patient_name": "Varun Batra",
+      "blood_group": "AB-",
+      "units_needed": 1,
+      "hospital_name": "Sir Ganga Ram Hospital",
+      "city": "Delhi",
+      "contact_person": "Dr. Coordinator",
+      "contact_phone": "+91 9851562053",
+      "contact_email": null,
+      "urgency": "Normal",
+      "is_emergency": false,
+      "required_by_date": "2026-09-11",
+      "reason": "Scheduled medical treatment",
+      "status": "Pending",
+      "fulfillment_source": null
     }
   ],
   "donations": [
@@ -381,6 +437,18 @@
       "donation_date": "2026-09-11",
       "camp_or_hospital": "AIIMS Central Hospital Voluntary Camp",
       "hemoglobin_level": 13.6,
+      "status": "Tested_Safe"
+    },
+    {
+      "id": 6,
+      "created_at": "2026-09-11T19:49:01.794Z",
+      "donor_id": null,
+      "donor_name": "Karan Mehra",
+      "blood_group": "A-",
+      "units_donated": 1,
+      "donation_date": "2026-09-11",
+      "camp_or_hospital": "AIIMS Central Hospital Voluntary Camp",
+      "hemoglobin_level": 12.8,
       "status": "Tested_Safe"
     }
   ],

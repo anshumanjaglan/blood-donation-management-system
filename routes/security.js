@@ -47,6 +47,26 @@ function generateId(prefix) {
 // 1. ACCESS ATTEMPT APPROVAL WORKFLOW
 // ==========================================
 
+function createAccessRequest({ requester_name, requester_role, reason, phone, ip }) {
+  const newRequest = {
+    id: generateId('ACC'),
+    requester_name: (requester_name || 'Staff User').trim(),
+    requester_role: (requester_role || 'Staff / External User').trim(),
+    reason: (reason || 'Direct login attempt on Administrative Portal').trim(),
+    phone: phone || '',
+    ip: ip || '127.0.0.1',
+    timestamp: new Date().toISOString(),
+    status: 'PENDING',
+    temp_token: null
+  };
+
+  accessRequests.unshift(newRequest);
+  if (accessRequests.length > 50) accessRequests.pop();
+  return newRequest;
+}
+
+router.createAccessRequest = createAccessRequest;
+
 // Submit a new access attempt request (from non-master users on login page)
 router.post('/access-request', (req, res) => {
   const { requester_name, requester_role, reason, phone } = req.body;
@@ -54,21 +74,13 @@ router.post('/access-request', (req, res) => {
     return res.status(400).json({ success: false, message: 'Requester name and access reason are mandatory' });
   }
 
-  const newRequest = {
-    id: generateId('ACC'),
-    requester_name: requester_name.trim(),
-    requester_role: (requester_role || 'Staff Member').trim(),
-    reason: reason.trim(),
-    phone: phone || '',
-    ip: req.ip || req.connection.remoteAddress || '127.0.0.1',
-    timestamp: new Date().toISOString(),
-    status: 'PENDING',
-    temp_token: null
-  };
-
-  accessRequests.unshift(newRequest);
-  // Keep last 50
-  if (accessRequests.length > 50) accessRequests.pop();
+  const newRequest = createAccessRequest({
+    requester_name,
+    requester_role,
+    reason,
+    phone,
+    ip: req.ip || req.connection.remoteAddress || '127.0.0.1'
+  });
 
   return res.json({
     success: true,

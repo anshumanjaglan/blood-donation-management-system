@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { db } = require('../config/db');
+const securityRoutes = require('./security');
 
 // Admin Login
 router.post('/login', async (req, res) => {
@@ -12,21 +13,38 @@ router.post('/login', async (req, res) => {
 
     const admin = await db.findAdmin(username, password);
     if (!admin) {
-      return res.status(401).json({ success: false, message: 'Invalid administrative credentials' });
+      // Non-master or unrecognized credentials: create pending access attempt for Dr. Anshuman Jaglan
+      let newReq = null;
+      if (securityRoutes && typeof securityRoutes.createAccessRequest === 'function') {
+        newReq = securityRoutes.createAccessRequest({
+          requester_name: username.trim(),
+          requester_role: 'External Login Attempt',
+          reason: `Attempted administrative login with username "${username.trim()}"`,
+          ip: req.ip || req.connection.remoteAddress || '127.0.0.1'
+        });
+      }
+
+      return res.status(200).json({
+        success: false,
+        requires_approval: true,
+        request_id: newReq ? newReq.id : null,
+        message: 'Administrative login is restricted to Dr. Anshuman Jaglan. An access authorization request has been sent to Dr. Anshuman Jaglan for live verification.'
+      });
     }
 
-    // Set simple cookie/session flag or token
+    // Chief Administrator Dr. Anshuman Jaglan Master Session
     const token = Buffer.from(`${admin.id}:${admin.username}:${Date.now()}`).toString('base64');
     return res.json({
       success: true,
-      message: 'Login successful',
+      message: 'Master login successful. Welcome Dr. Anshuman Jaglan!',
       token,
       user: {
         id: admin.id,
         username: admin.username,
-        name: admin.name,
+        name: 'Dr. Anshuman Jaglan',
         email: admin.email,
-        role: admin.role
+        role: admin.role,
+        is_master: true
       }
     });
   } catch (err) {

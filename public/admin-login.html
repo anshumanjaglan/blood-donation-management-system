@@ -157,7 +157,7 @@
       <div style="margin-top:20px;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:var(--radius-sm);font-size:0.75rem;color:#94a3b8;">
         <strong style="color:#38bdf8;">Academic Minor Project Security Shield:</strong><br>
         Chief Administrator: <strong>Dr. Anshuman Jaglan</strong> &bull; MAIT ITE (Batch 2023-2027)<br>
-        Direct Master Credentials: <code>admin</code> / <code>password123</code>
+        <span style="color:#f87171;">🛡️ System strictly locked. All non-master access attempts require live authorization from Dr. Anshuman Jaglan.</span>
       </div>
     </div>
 
@@ -223,6 +223,22 @@
           setTimeout(() => {
             window.location.href = 'admin-dashboard.html';
           }, 500);
+        } else if (json.requires_approval && json.request_id) {
+          currentRequestId = json.request_id;
+          document.getElementById('master-login-form').style.display = 'none';
+          document.getElementById('staff-request-form').style.display = 'none';
+          const tabs = document.querySelector('.auth-tabs');
+          if (tabs) tabs.style.display = 'none';
+          document.getElementById('polling-box').style.display = 'block';
+          document.getElementById('poll-title').innerText = 'Access Request Transmitted';
+          document.getElementById('poll-desc').innerHTML = `
+            Request ID: <strong>${currentRequestId}</strong><br>
+            You attempted access as: <strong>${username}</strong>.<br>
+            A high-priority verification prompt has popped up on <strong>Dr. Anshuman Jaglan's</strong> screen.<br>
+            Waiting for live decision from Dr. Anshuman Jaglan...
+          `;
+          startPolling(currentRequestId);
+          showToast(json.message, 'warning');
         } else {
           showToast(json.message || 'Invalid master credentials', 'error');
           btn.disabled = false;
@@ -327,10 +343,20 @@
         clearInterval(activePollingInterval);
         activePollingInterval = null;
       }
+      const tabs = document.querySelector('.auth-tabs');
+      if (tabs) tabs.style.display = 'flex';
       document.getElementById('polling-box').style.display = 'none';
-      document.getElementById('staff-request-form').style.display = 'block';
-      document.getElementById('submit-request-btn').disabled = false;
-      document.getElementById('submit-request-btn').innerText = 'Send Access Request to Dr. Anshuman Jaglan →';
+      switchAuthTab('master');
+      const masterBtn = document.getElementById('master-login-btn');
+      if (masterBtn) {
+        masterBtn.disabled = false;
+        masterBtn.innerText = 'Master Unlock & Open Dashboard →';
+      }
+      const submitBtn = document.getElementById('submit-request-btn');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Send Access Request to Dr. Anshuman Jaglan →';
+      }
     }
   </script>
 </body>

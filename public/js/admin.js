@@ -37,6 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(() => {
     triggerLiveRefresh(true);
   }, 35000);
+
+  // Chief Admin Security & Authorization Radar Poll
+  pollPendingSecurityApprovals();
+  setInterval(() => {
+    pollPendingSecurityApprovals();
+  }, 2500);
 });
 
 function logoutAdmin() {
@@ -59,7 +65,8 @@ function showAdminTab(tabId, subfilter = null) {
     requests: { title: 'Patient & Hospital Requisitions', sub: 'Manage, verify, match, and fulfill clinical blood requests.' },
     donors: { title: 'Registered Voluntary Donors', sub: 'Manage donor roster, contact details, and availability status.' },
     donations: { title: 'Donation History & Camp Records', sub: 'Audit logs of whole blood units collected and tested.' },
-    reports: { title: 'Reports & Academic Viva Deliverables', sub: 'Generate CSV audits and printable sheets for project defense.' }
+    reports: { title: 'Reports & Academic Viva Deliverables', sub: 'Generate CSV audits and printable sheets for project defense.' },
+    security: { title: '🛡️ Chief Administrator Security & Access Gateway', sub: 'Real-time security interceptor, pending login authorizations, and database mutation guard.' }
   };
 
   if (titles[tabId]) {
@@ -69,9 +76,13 @@ function showAdminTab(tabId, subfilter = null) {
 
   // Find and activate sidebar link
   const sidebarLinks = document.querySelectorAll('.sidebar-link');
-  const mapping = { overview: 0, inventory: 1, requests: 2, donors: 3, donations: 4, reports: 5 };
+  const mapping = { overview: 0, inventory: 1, requests: 2, donors: 3, donations: 4, reports: 5, security: 6 };
   if (sidebarLinks[mapping[tabId]]) {
     sidebarLinks[mapping[tabId]].classList.add('active');
+  }
+
+  if (tabId === 'security') {
+    pollPendingSecurityApprovals();
   }
 
   if (tabId === 'requests' && subfilter === 'emergency') {
@@ -670,3 +681,339 @@ function downloadFile(content, fileName, mimeType) {
   URL.revokeObjectURL(url);
   showToast(`Exported ${fileName}`, 'success');
 }
+
+// ========================================================
+// CHIEF ADMINISTRATOR SECURITY & ACCESS GATEWAY CONTROLLER
+// Protected exclusively for Dr. Anshuman Jaglan
+// ========================================================
+
+let seenPendingIds = new Set();
+let currentModalItem = null;
+
+async function pollPendingSecurityApprovals() {
+  try {
+    const res = await fetch('/api/security/pending-approvals');
+    const data = await res.json();
+    if (!data.success) return;
+
+    // Update Shield Status Banner
+    const shieldStatusText = document.getElementById('shield-status-text');
+    if (shieldStatusText) {
+      if (data.shield_mode) {
+        shieldStatusText.innerText = 'ACTIVE (DATABASE LOCKED)';
+        shieldStatusText.style.color = '#4ade80';
+      } else {
+        shieldStatusText.innerText = 'PAUSED (DIRECT EDITS ALLOWED)';
+        shieldStatusText.style.color = '#f59e0b';
+      }
+    }
+
+    // Update Sidebar badge
+    const sidebarBadge = document.getElementById('sidebar-security-badge');
+    if (sidebarBadge) {
+      if (data.total_pending > 0) {
+        sidebarBadge.innerText = data.total_pending;
+        sidebarBadge.style.display = 'inline-block';
+      } else {
+        sidebarBadge.style.display = 'none';
+      }
+    }
+
+    // Update Tab count badges
+    const accessCountBadge = document.getElementById('pending-access-count-badge');
+    if (accessCountBadge) {
+      accessCountBadge.innerText = `${data.pending_access.length} Pending`;
+    }
+    const changesCountBadge = document.getElementById('pending-changes-count-badge');
+    if (changesCountBadge) {
+      changesCountBadge.innerText = `${data.pending_changes.length} Pending`;
+    }
+
+    // Render tables
+    renderAccessRequestsTable(data.pending_access, data.history_access);
+    renderChangeRequestsTable(data.pending_changes, data.history_changes);
+
+    // Auto-pop modal for Dr. Anshuman Jaglan if new pending items arrive
+    const approvalModal = document.getElementById('chief-admin-approval-modal');
+    const isModalOpen = approvalModal && approvalModal.style.display === 'flex';
+
+    if (!isModalOpen) {
+      // 1. Check for unseen pending access request
+      const unseenAccess = data.pending_access.find(r => !seenPendingIds.has(r.id));
+      if (unseenAccess) {
+        seenPendingIds.add(unseenAccess.id);
+        openChiefApprovalModal(unseenAccess, 'access');
+        return;
+      }
+
+      // 2. Check for unseen pending database change request
+      const unseenChange = data.pending_changes.find(c => !seenPendingIds.has(c.id));
+      if (unseenChange) {
+        seenPendingIds.add(unseenChange.id);
+        openChiefApprovalModal(unseenChange, 'change');
+        return;
+      }
+    }
+  } catch (err) {
+    // Silent fail in polling loop
+  }
+}
+
+function openChiefApprovalModal(item, type) {
+  const modal = document.getElementById('chief-admin-approval-modal');
+  const title = document.getElementById('chief-modal-title');
+  const body = document.getElementById('chief-modal-body');
+  const actions = document.getElementById('chief-modal-action-buttons');
+  if (!modal || !title || !body || !actions) return;
+
+  currentModalItem = item;
+
+  if (type === 'access') {
+    title.innerText = '🚨 Incoming Staff Access Attempt';
+    body.innerHTML = `
+      <div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:16px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:1.5rem;">👤</span>
+          <div>
+            <h4 style="margin:0;color:#f87171;font-size:1.15rem;font-weight:700;">${item.requester_name}</h4>
+            <span style="font-size:0.8rem;color:#cbd5e1;">${item.requester_role}</span>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:0.88rem;color:#e2e8f0;background:rgba(0,0,0,0.35);padding:10px 12px;border-radius:6px;border-left:3px solid #f87171;">
+          <strong>Access Reason:</strong> "${item.reason}"
+        </div>
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:16px;font-size:0.8rem;color:#94a3b8;">
+          <span>🕒 <strong>Attempt Time:</strong> ${new Date(item.timestamp).toLocaleTimeString()}</span>
+          <span>🌐 <strong>Network:</strong> ${item.ip || 'Local Subnet'}</span>
+          ${item.phone ? `<span>📞 <strong>Contact:</strong> ${item.phone}</span>` : ''}
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:#cbd5e1;line-height:1.5;margin:0;">
+        ⚠️ <strong>Security Advisory:</strong> As Chief Administrator, only you (<span style="color:#60a5fa;font-weight:700;">Dr. Anshuman Jaglan</span>) can authorize external staff access into the system. Do you wish to grant immediate dashboard access?
+      </p>
+    `;
+    actions.innerHTML = `
+      <button type="button" class="btn btn-secondary" style="background:#dc2626;color:#fff;border-color:#b91c1c;font-weight:700;" onclick="rejectAccessRequest('${item.id}')">
+        🚫 Reject &amp; Block Access
+      </button>
+      <button type="button" class="btn btn-primary" style="background:#16a34a;color:#fff;border-color:#15803d;font-weight:700;" onclick="approveAccessRequest('${item.id}')">
+        ✅ Approve &amp; Grant Access
+      </button>
+    `;
+  } else if (type === 'change') {
+    title.innerText = '🔒 Database Modification Proposal';
+    body.innerHTML = `
+      <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.4);border-radius:10px;padding:16px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:1.5rem;">⚡</span>
+          <div>
+            <span class="badge badge-emergency" style="font-size:0.75rem;letter-spacing:0.05em;">${item.action_type}</span>
+            <h4 style="margin:6px 0 0;color:#fbbf24;font-size:1.05rem;font-weight:700;">${item.description}</h4>
+          </div>
+        </div>
+        <div style="margin-top:10px;background:rgba(0,0,0,0.35);padding:10px 12px;border-radius:6px;font-size:0.85rem;color:#e2e8f0;border-left:3px solid #fbbf24;">
+          <strong>Proposed By:</strong> ${item.requester}<br>
+          <strong>Timestamp:</strong> ${new Date(item.timestamp).toLocaleTimeString()} (${new Date(item.timestamp).toLocaleDateString()})<br>
+          <strong style="color:#94a3b8;">Payload Data:</strong> <code style="color:#67e8f9;font-size:0.8rem;background:rgba(0,0,0,0.4);padding:2px 6px;border-radius:4px;">${JSON.stringify(item.payload)}</code>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:#cbd5e1;line-height:1.5;margin:0;">
+        🛡️ <strong>Chief Administrator Protection:</strong> This database mutation is currently held in the isolated security buffer. The database will <em>not</em> be changed without Dr. Anshuman Jaglan's verified consent.
+      </p>
+    `;
+    actions.innerHTML = `
+      <button type="button" class="btn btn-secondary" style="background:#dc2626;color:#fff;border-color:#b91c1c;font-weight:700;" onclick="rejectChangeRequest('${item.id}')">
+        🚫 Reject &amp; Discard
+      </button>
+      <button type="button" class="btn btn-primary" style="background:#16a34a;color:#fff;border-color:#15803d;font-weight:700;" onclick="approveChangeRequest('${item.id}')">
+        ✅ Approve &amp; Commit to Database
+      </button>
+    `;
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeChiefApprovalModal() {
+  const modal = document.getElementById('chief-admin-approval-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+async function approveAccessRequest(id) {
+  try {
+    const res = await fetch(`/api/security/approve-access/${id}`, { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      showToast(json.message, 'success');
+      closeChiefApprovalModal();
+      pollPendingSecurityApprovals();
+    } else {
+      showToast(json.message || 'Approval failed', 'error');
+    }
+  } catch (err) {
+    showToast('Failed to approve access request', 'error');
+  }
+}
+
+async function rejectAccessRequest(id) {
+  try {
+    const res = await fetch(`/api/security/reject-access/${id}`, { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      showToast(json.message, 'info');
+      closeChiefApprovalModal();
+      pollPendingSecurityApprovals();
+    } else {
+      showToast(json.message || 'Rejection failed', 'error');
+    }
+  } catch (err) {
+    showToast('Failed to reject access request', 'error');
+  }
+}
+
+async function approveChangeRequest(id) {
+  try {
+    const res = await fetch(`/api/security/approve-change/${id}`, { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      showToast(json.message, 'success');
+      closeChiefApprovalModal();
+      pollPendingSecurityApprovals();
+      refreshDashboardData(true);
+    } else {
+      showToast(json.message || 'Approval failed', 'error');
+    }
+  } catch (err) {
+    showToast('Failed to commit change request', 'error');
+  }
+}
+
+async function rejectChangeRequest(id) {
+  try {
+    const res = await fetch(`/api/security/reject-change/${id}`, { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      showToast(json.message, 'info');
+      closeChiefApprovalModal();
+      pollPendingSecurityApprovals();
+    } else {
+      showToast(json.message || 'Rejection failed', 'error');
+    }
+  } catch (err) {
+    showToast('Failed to reject change request', 'error');
+  }
+}
+
+async function toggleMasterShield() {
+  try {
+    const res = await fetch('/api/security/toggle-shield', { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      showToast(json.message, json.shield_mode ? 'success' : 'info');
+      pollPendingSecurityApprovals();
+    }
+  } catch (err) {
+    showToast('Could not toggle Master Shield', 'error');
+  }
+}
+
+async function simulateAccessAttempt() {
+  try {
+    const res = await fetch('/api/security/simulate-access-attempt', { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      showToast(json.message, 'info');
+      setTimeout(pollPendingSecurityApprovals, 300);
+    }
+  } catch (err) {
+    showToast('Simulation failed', 'error');
+  }
+}
+
+async function simulateChangeRequest() {
+  try {
+    const res = await fetch('/api/security/simulate-change-request', { method: 'POST' });
+    const json = await res.json();
+    if (json.success) {
+      showToast(json.message, 'info');
+      setTimeout(pollPendingSecurityApprovals, 300);
+    }
+  } catch (err) {
+    showToast('Simulation failed', 'error');
+  }
+}
+
+function renderAccessRequestsTable(pending, history) {
+  const tbody = document.getElementById('access-requests-tbody');
+  if (!tbody) return;
+
+  const all = [...(pending || []), ...(history || []).filter(h => h.status !== 'PENDING')];
+  if (all.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px;">No access requests recorded. System secure.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = all.map(r => {
+    const isPending = r.status === 'PENDING';
+    const statusBadge = isPending
+      ? `<span class="badge badge-pending">PENDING DR. ANSHUMAN'S APPROVAL</span>`
+      : (r.status === 'APPROVED' ? `<span class="badge badge-fulfilled">APPROVED</span>` : `<span class="badge badge-rejected">REJECTED</span>`);
+
+    const actionHtml = isPending
+      ? `<div style="display:flex;gap:6px;">
+          <button class="btn btn-sm btn-primary" style="background:#16a34a;border-color:#15803d;padding:4px 8px;font-size:0.75rem;" onclick="approveAccessRequest('${r.id}')">Approve</button>
+          <button class="btn btn-sm btn-secondary" style="background:#dc2626;border-color:#b91c1c;padding:4px 8px;font-size:0.75rem;" onclick="rejectAccessRequest('${r.id}')">Reject</button>
+         </div>`
+      : `<span style="font-size:0.8rem;color:var(--text-muted);">${r.handled_by || 'Dr. Anshuman Jaglan'}</span>`;
+
+    return `
+      <tr>
+        <td><code>${r.id}</code></td>
+        <td><strong>${r.requester_name}</strong></td>
+        <td>${r.requester_role}</td>
+        <td style="max-width:240px;font-size:0.85rem;">${r.reason}</td>
+        <td style="font-size:0.85rem;">${new Date(r.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</td>
+        <td>${statusBadge}</td>
+        <td>${actionHtml}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderChangeRequestsTable(pending, history) {
+  const tbody = document.getElementById('changes-requests-tbody');
+  if (!tbody) return;
+
+  const all = [...(pending || []), ...(history || []).filter(h => h.status !== 'PENDING_APPROVAL')];
+  if (all.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px;">No database change proposals. Database locked.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = all.map(c => {
+    const isPending = c.status === 'PENDING_APPROVAL';
+    const statusBadge = isPending
+      ? `<span class="badge badge-emergency">PENDING MASTER VERIFICATION</span>`
+      : (c.status === 'COMMITTED' ? `<span class="badge badge-fulfilled">COMMITTED TO DB</span>` : `<span class="badge badge-rejected">REJECTED &amp; DISCARDED</span>`);
+
+    const actionHtml = isPending
+      ? `<div style="display:flex;gap:6px;">
+          <button class="btn btn-sm btn-primary" style="background:#16a34a;border-color:#15803d;padding:4px 8px;font-size:0.75rem;" onclick="approveChangeRequest('${c.id}')">Approve &amp; Commit</button>
+          <button class="btn btn-sm btn-secondary" style="background:#dc2626;border-color:#b91c1c;padding:4px 8px;font-size:0.75rem;" onclick="rejectChangeRequest('${c.id}')">Reject</button>
+         </div>`
+      : `<span style="font-size:0.8rem;color:var(--text-muted);">${c.handled_by || 'Dr. Anshuman Jaglan'}</span>`;
+
+    return `
+      <tr>
+        <td><code>${c.id}</code></td>
+        <td><span class="badge badge-emergency" style="font-size:0.7rem;">${c.action_type}</span></td>
+        <td style="max-width:260px;font-size:0.85rem;"><strong>${c.description}</strong></td>
+        <td>${c.requester}</td>
+        <td style="font-size:0.85rem;">${new Date(c.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</td>
+        <td>${statusBadge}</td>
+        <td>${actionHtml}</td>
+      </tr>
+    `;
+  }).join('');
+}
+

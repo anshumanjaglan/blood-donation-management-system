@@ -6,6 +6,7 @@ require('dotenv').config();
 const { initDatabase } = require('./config/db');
 const apiRoutes = require('./routes/api');
 const authRoutes = require('./routes/auth');
+const securityRoutes = require('./routes/security');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Mount API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/security', securityRoutes);
 app.use('/api', apiRoutes);
 
 // Health check

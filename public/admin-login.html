@@ -3,67 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administrator Login | Blood Donation Management System</title>
+  <title>Security Gateway | Blood Donation Management System</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid #e2e8f0;
+      margin-bottom: 24px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+    .auth-tab-btn.active {
+      color: #dc2626;
+      border-bottom-color: #dc2626;
+    }
+    .polling-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      color: #fff;
+      text-align: center;
+      display: none;
+    }
+    .pulse-radar {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: rgba(220, 38, 38, 0.2);
+      border: 2px solid #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+      70% { box-shadow: 0 0 0 16px rgba(220, 38, 38, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+    }
+  </style>
 </head>
-<body style="background:#f1f5f9;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:20px;">
+<body style="background:#0b0f19;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;padding:20px;">
 
-  <div style="max-width:420px;width:100%;">
-    <div style="text-align:center;margin-bottom:28px;">
-      <a href="index.html" class="brand" style="justify-content:center;margin-bottom:12px;">
-        <div class="brand-icon" style="width:48px;height:48px;">
+  <div style="max-width:460px;width:100%;">
+    <!-- Brand Header -->
+    <div style="text-align:center;margin-bottom:24px;">
+      <a href="index.html" class="brand" style="justify-content:center;margin-bottom:10px;">
+        <div class="brand-icon" style="width:46px;height:46px;background:#dc2626;">
           <svg viewBox="0 0 24 24" style="width:26px;height:26px;"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
         </div>
       </a>
-      <h1 style="font-size:1.6rem;font-weight:800;color:var(--text-main);">Administrator Portal</h1>
-      <p style="color:var(--text-muted);font-size:0.9rem;">Sign in to access blood bank inventory, request approvals, and donor controls.</p>
+      <h1 style="font-size:1.6rem;font-weight:900;color:#ffffff;">Chief Administrator Gateway</h1>
+      <p style="color:#94a3b8;font-size:0.85rem;margin-top:4px;">
+        Authorized Authority: <strong>Dr. Anshuman Jaglan</strong> (MAIT ITE)
+      </p>
     </div>
 
-    <div class="card" style="box-shadow:var(--shadow-lg);padding:32px;">
-      <form id="admin-login-form">
+    <!-- Security Card -->
+    <div class="card" style="background:#1e293b;border:1px solid #334155;box-shadow:0 25px 50px -12px rgba(0,0,0,0.8);padding:28px;color:#f8fafc;">
+      
+      <!-- Tabs -->
+      <div class="auth-tabs" style="border-bottom-color:#334155;">
+        <button type="button" id="tab-master" class="auth-tab-btn active" onclick="switchAuthTab('master')">
+          🔑 Master Administrator
+        </button>
+        <button type="button" id="tab-guest" class="auth-tab-btn" onclick="switchAuthTab('guest')">
+          🛡️ Request Staff Access
+        </button>
+      </div>
+
+      <!-- MASTER LOGIN FORM (Dr. Anshuman Jaglan) -->
+      <form id="master-login-form">
         <div class="form-group">
-          <label class="form-label">Username</label>
-          <input type="text" id="username" class="form-control" placeholder="admin" value="admin" required autocomplete="username">
+          <label class="form-label" style="color:#cbd5e1;">Chief Administrator Username / Key</label>
+          <input type="text" id="username" class="form-control" style="background:#0f172a;border-color:#334155;color:#fff;" placeholder="admin or 9466291852" value="admin" required autocomplete="username">
         </div>
 
         <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" id="password" class="form-control" placeholder="••••••••" value="password123" required autocomplete="current-password">
+          <label class="form-label" style="color:#cbd5e1;">Master Secret Password</label>
+          <input type="password" id="password" class="form-control" style="background:#0f172a;border-color:#334155;color:#fff;" placeholder="••••••••" value="password123" required autocomplete="current-password">
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:0.85rem;">
-          <label class="checkbox-label" style="margin-bottom:0;">
-            <input type="checkbox" checked>
-            <span>Remember me</span>
-          </label>
-          <span style="color:var(--text-light);">Secure SSL</span>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:0.8rem;color:#94a3b8;">
+          <span>Security Guard: <strong style="color:#4ade80;">Active</strong></span>
+          <span>Role: Chief Medical Admin</span>
         </div>
 
-        <button type="submit" id="login-btn" class="btn btn-primary btn-block" style="height:44px;">
-          Sign In to Dashboard &rarr;
+        <button type="submit" id="master-login-btn" class="btn btn-red btn-block" style="height:44px;background:#dc2626;color:#fff;font-weight:700;">
+          Master Unlock &amp; Open Dashboard &rarr;
         </button>
       </form>
 
-      <!-- Project Demo Credentials Helper -->
-      <div style="margin-top:20px;padding:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius-sm);font-size:0.8rem;color:#1e40af;">
-        <strong>Minor Project Evaluator Note:</strong><br>
-        Demo Login Credentials:<br>
-        Username: <code>admin</code> &bull; Password: <code>password123</code>
+      <!-- STAFF ACCESS REQUEST FORM (External / Staff Users) -->
+      <form id="staff-request-form" style="display:none;">
+        <div style="background:#0f172a;border-left:3px solid #f59e0b;padding:10px 12px;border-radius:4px;font-size:0.8rem;color:#fde68a;margin-bottom:16px;">
+          <strong>Access Authorization Policy:</strong><br>
+          Any non-master login triggers an instant notification on Dr. Anshuman Jaglan's dashboard. You will enter upon his live approval.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="color:#cbd5e1;">Your Full Name *</label>
+          <input type="text" id="req-name" class="form-control" style="background:#0f172a;border-color:#334155;color:#fff;" placeholder="e.g. Nurse Sunita or Examiner Name" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="color:#cbd5e1;">Your Role / Institution *</label>
+          <input type="text" id="req-role" class="form-control" style="background:#0f172a;border-color:#334155;color:#fff;" placeholder="e.g. AIIMS Blood Desk / University Reviewer" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="color:#cbd5e1;">Reason for Access *</label>
+          <textarea id="req-reason" class="form-control" style="background:#0f172a;border-color:#334155;color:#fff;min-height:70px;" placeholder="e.g. Emergency audit of O- blood stock for trauma ICU" required></textarea>
+        </div>
+
+        <button type="submit" id="submit-request-btn" class="btn btn-block" style="background:#f59e0b;color:#000;font-weight:800;height:44px;">
+          Send Access Request to Dr. Anshuman Jaglan &rarr;
+        </button>
+      </form>
+
+      <!-- LIVE POLLING RADAR BOX -->
+      <div id="polling-box" class="polling-box">
+        <div class="pulse-radar">
+          <svg viewBox="0 0 24 24" style="width:24px;height:24px;fill:none;stroke:#dc2626;stroke-width:2;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h4 id="poll-title" style="color:#ffffff;font-size:1.1rem;margin-bottom:6px;">Awaiting Authorization...</h4>
+        <p id="poll-desc" style="font-size:0.825rem;color:#94a3b8;margin-bottom:14px;">
+          Request sent to <strong>Dr. Anshuman Jaglan</strong>.<br>
+          Please wait while Dr. Anshuman Jaglan reviews your attempt on his screen.
+        </p>
+        <div id="poll-status-badge" class="badge badge-pending" style="font-size:0.8rem;padding:4px 12px;">
+          Status: PENDING CHIEF APPROVAL
+        </div>
+        <div style="margin-top:16px;">
+          <button type="button" class="btn btn-outline btn-sm" style="border-color:#475569;color:#cbd5e1;" onclick="cancelPolling()">
+            Cancel Request
+          </button>
+        </div>
+      </div>
+
+      <!-- Academic Notice -->
+      <div style="margin-top:20px;padding:12px;background:#0f172a;border:1px solid #334155;border-radius:var(--radius-sm);font-size:0.75rem;color:#94a3b8;">
+        <strong style="color:#38bdf8;">Academic Minor Project Security Shield:</strong><br>
+        Chief Administrator: <strong>Dr. Anshuman Jaglan</strong> &bull; MAIT ITE (Batch 2023-2027)<br>
+        Direct Master Credentials: <code>admin</code> / <code>password123</code>
       </div>
     </div>
 
     <div style="text-align:center;margin-top:16px;">
-      <a href="index.html" style="font-size:0.85rem;color:var(--text-muted);">&larr; Return to Public Portal</a>
+      <a href="index.html" style="font-size:0.825rem;color:#64748b;text-decoration:none;">&larr; Return to Public Portal</a>
     </div>
   </div>
 
   <script src="js/main.js"></script>
   <script>
-    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+    let activePollingInterval = null;
+    let currentRequestId = null;
+
+    function switchAuthTab(tab) {
+      const tabMaster = document.getElementById('tab-master');
+      const tabGuest = document.getElementById('tab-guest');
+      const formMaster = document.getElementById('master-login-form');
+      const formStaff = document.getElementById('staff-request-form');
+      const pollingBox = document.getElementById('polling-box');
+
+      if (tab === 'master') {
+        tabMaster.classList.add('active');
+        tabGuest.classList.remove('active');
+        formMaster.style.display = 'block';
+        formStaff.style.display = 'none';
+        pollingBox.style.display = 'none';
+        cancelPolling();
+      } else {
+        tabGuest.classList.add('active');
+        tabMaster.classList.remove('active');
+        formMaster.style.display = 'none';
+        formStaff.style.display = 'block';
+        pollingBox.style.display = 'none';
+      }
+    }
+
+    // 1. Master Login by Dr. Anshuman Jaglan
+    document.getElementById('master-login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = document.getElementById('login-btn');
+      const btn = document.getElementById('master-login-btn');
       btn.disabled = true;
-      btn.innerText = 'Authenticating...';
+      btn.innerText = 'Verifying Master Credentials...';
 
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
@@ -78,22 +214,124 @@
 
         if (json.success && json.token) {
           localStorage.setItem('blood_admin_token', json.token);
-          localStorage.setItem('blood_admin_user', JSON.stringify(json.user));
-          showToast('Login authorized. Loading dashboard...', 'success');
+          localStorage.setItem('blood_admin_user', JSON.stringify({
+            ...json.user,
+            is_master: true,
+            chief_admin: 'Dr. Anshuman Jaglan'
+          }));
+          showToast('Master Authorization Verified. Welcome, Dr. Anshuman Jaglan!', 'success');
           setTimeout(() => {
             window.location.href = 'admin-dashboard.html';
-          }, 600);
+          }, 500);
         } else {
-          showToast(json.message || 'Invalid username or password', 'error');
+          showToast(json.message || 'Invalid master credentials', 'error');
           btn.disabled = false;
-          btn.innerText = 'Sign In to Dashboard →';
+          btn.innerText = 'Master Unlock & Open Dashboard →';
         }
       } catch (err) {
         showToast('Connection error during authentication', 'error');
         btn.disabled = false;
-        btn.innerText = 'Sign In to Dashboard →';
+        btn.innerText = 'Master Unlock & Open Dashboard →';
       }
     });
+
+    // 2. Staff Access Request Submission
+    document.getElementById('staff-request-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submit-request-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Transmitting Request...';
+
+      const requester_name = document.getElementById('req-name').value.trim();
+      const requester_role = document.getElementById('req-role').value.trim();
+      const reason = document.getElementById('req-reason').value.trim();
+
+      try {
+        const res = await fetch('/api/security/access-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requester_name, requester_role, reason })
+        });
+        const json = await res.json();
+
+        if (json.success && json.request_id) {
+          currentRequestId = json.request_id;
+          document.getElementById('staff-request-form').style.display = 'none';
+          document.getElementById('polling-box').style.display = 'block';
+          document.getElementById('poll-desc').innerHTML = `
+            Request ID: <strong>${currentRequestId}</strong><br>
+            A high-priority alert has popped up on <strong>Dr. Anshuman Jaglan's</strong> screen.<br>
+            Waiting for approval...
+          `;
+          startPolling(currentRequestId);
+        } else {
+          showToast(json.message || 'Failed to submit request', 'error');
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Send Access Request to Dr. Anshuman Jaglan →';
+        }
+      } catch (err) {
+        showToast('Error communicating with security service', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Send Access Request to Dr. Anshuman Jaglan →';
+      }
+    });
+
+    // Poll for Dr. Anshuman Jaglan's Live Decision
+    function startPolling(reqId) {
+      if (activePollingInterval) clearInterval(activePollingInterval);
+
+      activePollingInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/security/access-status/${reqId}`);
+          const json = await res.json();
+
+          if (json.success) {
+            if (json.status === 'APPROVED') {
+              clearInterval(activePollingInterval);
+              document.getElementById('poll-title').innerText = '✅ Access Authorized!';
+              document.getElementById('poll-desc').innerHTML = `
+                <span style="color:#4ade80;font-weight:700;">Approved by Dr. Anshuman Jaglan.</span><br>
+                Logging you into authorized staff session...
+              `;
+              document.getElementById('poll-status-badge').className = 'badge badge-fulfilled';
+              document.getElementById('poll-status-badge').innerText = 'STATUS: AUTHORIZED';
+
+              localStorage.setItem('blood_admin_token', json.temp_token || 'staff_token');
+              localStorage.setItem('blood_admin_user', JSON.stringify({
+                name: json.requester_name || 'Authorized Staff',
+                role: 'Authorized Staff',
+                is_master: false
+              }));
+
+              setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+              }, 1200);
+            } else if (json.status === 'REJECTED') {
+              clearInterval(activePollingInterval);
+              document.getElementById('poll-title').innerText = '❌ Access Denied';
+              document.getElementById('poll-desc').innerHTML = `
+                <span style="color:#f87171;font-weight:700;">Chief Administrator Dr. Anshuman Jaglan denied this access attempt.</span>
+              `;
+              document.getElementById('poll-status-badge').className = 'badge badge-emergency';
+              document.getElementById('poll-status-badge').innerText = 'STATUS: REJECTED';
+            }
+          }
+        } catch (err) {
+          // Keep polling
+        }
+      }, 2000);
+    }
+
+    function cancelPolling() {
+      if (activePollingInterval) {
+        clearInterval(activePollingInterval);
+        activePollingInterval = null;
+      }
+      document.getElementById('polling-box').style.display = 'none';
+      document.getElementById('staff-request-form').style.display = 'block';
+      document.getElementById('submit-request-btn').disabled = false;
+      document.getElementById('submit-request-btn').innerText = 'Send Access Request to Dr. Anshuman Jaglan →';
+    }
   </script>
 </body>
 </html>

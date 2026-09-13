@@ -1,0 +1,3 @@
+@echo off
+echo Opening Blood Donation Viva Voce Preparatory Master Guide...
+start "" "%~dp0Blood_Donation_Viva_Prep_Hinglish.pdf"

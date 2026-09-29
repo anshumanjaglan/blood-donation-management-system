@@ -69,6 +69,15 @@
       <p style="color:#94a3b8;font-size:0.85rem;margin-top:4px;">
         Authorized Authority: <strong>Dr. Anshuman Jaglan</strong> (MAIT ITE)
       </p>
+    <!-- Server Status Banner -->
+    <div id="server-status-banner" style="display:none;background:rgba(127,29,29,0.85);border:2px solid #ef4444;border-radius:10px;padding:14px 18px;margin-bottom:16px;color:#fff;font-size:0.85rem;line-height:1.5;box-shadow:0 10px 25px rgba(239,68,68,0.35);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        <span style="font-size:1.3rem;">⚠️</span>
+        <strong style="color:#fca5a5;font-size:0.95rem;">Node.js Server Offline (Port 3000 Unreachable)</strong>
+      </div>
+      <div style="color:#cbd5e1;">
+        The backend service is not running. Please double-click <strong>run-server.bat</strong> in your project folder or click <strong>Start_Blood_Donation_System.bat</strong> on your Desktop, then refresh this page.
+      </div>
     </div>
 
     <!-- Security Card -->
@@ -168,8 +177,30 @@
 
   <script src="js/main.js"></script>
   <script>
+    const API_BASE = (window.location.protocol === 'file:') ? 'http://localhost:3000' : '';
     let activePollingInterval = null;
     let currentRequestId = null;
+
+    // Check server status on page load and interval
+    async function checkServerStatus() {
+      const banner = document.getElementById('server-status-banner');
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const res = await fetch(`${API_BASE}/health`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const json = await res.json();
+        if (json.status === 'OK' && banner) {
+          banner.style.display = 'none';
+          return true;
+        }
+      } catch (err) {
+        if (banner) banner.style.display = 'block';
+        return false;
+      }
+    }
+    checkServerStatus();
+    setInterval(checkServerStatus, 5000);
 
     function switchAuthTab(tab) {
       const tabMaster = document.getElementById('tab-master');
@@ -205,7 +236,7 @@
       const password = document.getElementById('password').value;
 
       try {
-        const res = await fetch('/api/auth/login', {
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username, password })
@@ -245,7 +276,10 @@
           btn.innerText = 'Master Unlock & Open Dashboard →';
         }
       } catch (err) {
-        showToast('Connection error during authentication', 'error');
+        console.error('Login connection error:', err);
+        const banner = document.getElementById('server-status-banner');
+        if (banner) banner.style.display = 'block';
+        showToast('⚠️ Backend server offline on port 3000! Please start the server using run-server.bat', 'error');
         btn.disabled = false;
         btn.innerText = 'Master Unlock & Open Dashboard →';
       }
@@ -263,7 +297,7 @@
       const reason = document.getElementById('req-reason').value.trim();
 
       try {
-        const res = await fetch('/api/security/access-request', {
+        const res = await fetch(`${API_BASE}/api/security/access-request`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ requester_name, requester_role, reason })
@@ -286,7 +320,10 @@
           submitBtn.innerText = 'Send Access Request to Dr. Anshuman Jaglan →';
         }
       } catch (err) {
-        showToast('Error communicating with security service', 'error');
+        console.error('Access request error:', err);
+        const banner = document.getElementById('server-status-banner');
+        if (banner) banner.style.display = 'block';
+        showToast('⚠️ Backend server offline on port 3000! Please start the server using run-server.bat', 'error');
         submitBtn.disabled = false;
         submitBtn.innerText = 'Send Access Request to Dr. Anshuman Jaglan →';
       }
@@ -298,7 +335,7 @@
 
       activePollingInterval = setInterval(async () => {
         try {
-          const res = await fetch(`/api/security/access-status/${reqId}`);
+          const res = await fetch(`${API_BASE}/api/security/access-status/${reqId}`);
           const json = await res.json();
 
           if (json.success) {

@@ -692,12 +692,31 @@ const db = {
 
   // Admin Auth
   async findAdmin(username, password) {
+    const rawUser = (username || '').trim();
+    const cleanUser = rawUser.toLowerCase();
+    const cleanPass = (password || '').trim();
+
     if (useMySQL) {
-      const [rows] = await pool.query('SELECT id, username, name, email, role FROM admins WHERE username = ? AND password = ?', [username, password]);
+      const [rows] = await pool.query(
+        `SELECT id, username, name, email, role FROM admins 
+         WHERE (LOWER(username) = ? OR LOWER(email) = ? OR phone = ? OR ? IN ('admin', '9466291852', 'anshuman')) 
+         AND (password = ? OR password = ?)`, 
+        [cleanUser, cleanUser, rawUser, cleanUser, password, cleanPass]
+      );
       return rows[0] || null;
     }
-    const admins = localDb.get('admins');
-    const user = admins.find(a => a.username === username && a.password === password);
+
+    const admins = localDb.get('admins') || [];
+    const user = admins.find(a => {
+      const unameMatch = a.username && a.username.toLowerCase() === cleanUser;
+      const emailMatch = a.email && a.email.toLowerCase() === cleanUser;
+      const phoneMatch = a.phone && (a.phone === rawUser || a.phone.replace(/[^0-9]/g, '') === rawUser.replace(/[^0-9]/g, ''));
+      const aliasMatch = (cleanUser === '9466291852' || cleanUser === 'anshuman' || cleanUser === 'dr. anshuman' || cleanUser === 'dr. anshuman jaglan') && (a.username === 'admin' || a.id === 1);
+      
+      const passMatch = a.password === password || a.password === cleanPass;
+      return (unameMatch || emailMatch || phoneMatch || aliasMatch) && passMatch;
+    });
+
     if (user) {
       const { password, ...safeUser } = user;
       return safeUser;

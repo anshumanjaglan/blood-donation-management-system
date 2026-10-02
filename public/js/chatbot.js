@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const chatbotToggle = document.getElementById('chatbot-toggle');
   const chatbotWindow = document.getElementById('chatbot-window');
+  const chatbotOverlay = document.getElementById('chatbot-overlay');
   const chatbotClose = document.getElementById('chatbot-close');
   const chatbotMessages = document.getElementById('chatbot-messages');
   const chatbotInput = document.getElementById('chatbot-input');
@@ -15,20 +16,31 @@ document.addEventListener('DOMContentLoaded', () => {
     isWindowOpen = !isWindowOpen;
     if (isWindowOpen) {
       chatbotWindow.classList.add('open');
+      if (chatbotOverlay) chatbotOverlay.classList.add('open');
       chatbotInput.focus();
       // Add initial greeting if empty
       if (chatHistory.length === 0) {
-        appendMessage('bot', "Hello! I am your AI Health Assistant. 🩺\n\nI can help you with:\n• Symptom analysis & minor illness advice\n• Diet & Nutrition (Weight, Sugar, Cholesterol)\n• Liver (SGPT/SGOT) & Kidney management\n• Mental health & Stress relief\n\nHow can I help you today?");
+        appendMessage('bot', "Hello! I am Dr. AI Health Assistant. 🩺\n\nI can help you with:\n• Symptom analysis & minor illness advice\n• Diet & Nutrition (Weight, Sugar, Cholesterol)\n• Liver (SGPT/SGOT) & Kidney management\n• Mental health & Stress relief\n\nHow can I help you today?");
       }
     } else {
       chatbotWindow.classList.remove('open');
+      if (chatbotOverlay) chatbotOverlay.classList.remove('open');
     }
   });
 
   chatbotClose.addEventListener('click', () => {
     isWindowOpen = false;
     chatbotWindow.classList.remove('open');
+    if (chatbotOverlay) chatbotOverlay.classList.remove('open');
   });
+  
+  if (chatbotOverlay) {
+    chatbotOverlay.addEventListener('click', () => {
+      isWindowOpen = false;
+      chatbotWindow.classList.remove('open');
+      chatbotOverlay.classList.remove('open');
+    });
+  }
 
   // Handle Send Message
   chatbotSend.addEventListener('click', sendMessage);

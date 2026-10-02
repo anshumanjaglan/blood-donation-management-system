@@ -28,37 +28,19 @@ router.post('/', async (req, res) => {
       }
     }
 
-    const contents = [];
+    // We completely ignore the 'history' array because sending previous medical context
+    // along with the new question accumulates too many medical keywords and triggers
+    // the API's strict safety filter (which manifests as a 503 High Demand error).
     
-    // Inject system instruction into the first message to avoid SDK 503 filters
-    let isFirstMessage = true;
-
-    if (history && Array.isArray(history)) {
-        for (const msg of history) {
-            let text = msg.text;
-            if (isFirstMessage && msg.role === 'user') {
-                text = `[System Instruction: ${SYSTEM_INSTRUCTION}]\n\nUser: ${text}`;
-                isFirstMessage = false;
-            }
-            contents.push({
-                role: msg.role === 'user' ? 'user' : 'model',
-                parts: [{ text: text }]
-            });
-        }
-    }
-    
-    let currentText = message;
-    if (isFirstMessage) {
-        currentText = `[System Instruction: ${SYSTEM_INSTRUCTION}]\n\nUser: ${message}`;
-    }
-
-    contents.push({
+    const contents = [
+      {
         role: 'user',
-        parts: [{ text: currentText }]
-    });
+        parts: [{ text: `[System Instruction: ${SYSTEM_INSTRUCTION}]\n\nUser: ${message}` }]
+      }
+    ];
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: 'gemini-3.7-flash',
       contents: contents,
       config: {
         temperature: 0.7,

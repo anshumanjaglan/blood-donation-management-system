@@ -183,7 +183,7 @@ img {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
   list-style: none;
 }
 
@@ -193,6 +193,7 @@ img {
   font-size: 0.95rem;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
+  white-space: nowrap;
 }
 
 .nav-links a:hover, .nav-links a.active {
@@ -230,6 +231,7 @@ img {
   transition: var(--transition);
   text-decoration: none;
   line-height: 1.4;
+  white-space: nowrap;
 }
 
 .btn-primary {

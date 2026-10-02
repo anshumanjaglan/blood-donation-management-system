@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chatbotInput.focus();
       // Add initial greeting if empty
       if (chatHistory.length === 0) {
-        appendMessage('bot', "Hello! I am Dr. AI Health Assistant. 🩺\n\nI can help you with:\n• Symptom analysis & minor illness advice\n• Diet & Nutrition (Weight, Sugar, Cholesterol)\n• Liver (SGPT/SGOT) & Kidney management\n• Mental health & Stress relief\n\nHow can I help you today?");
+        appendMessage('bot', "Hello! I am your AI Health Assistant. 🩺\n\nI can help you with:\n• Symptom analysis & minor illness advice\n• Diet & Nutrition (Weight, Sugar, Cholesterol)\n• Liver (SGPT/SGOT) & Kidney management\n• Mental health & Stress relief\n\nHow can I help you today?");
       }
     } else {
       chatbotWindow.classList.remove('open');

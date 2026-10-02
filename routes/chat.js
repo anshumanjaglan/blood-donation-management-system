@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { GoogleGenAI } = require('@google/genai');
 
-const apiKey = process.env.GEMINI_API_KEY;
-const ai = new GoogleGenAI(apiKey ? { apiKey: apiKey } : {});
-
 const SYSTEM_INSTRUCTION = `You are a helpful AI assistant. Answer the user's questions clearly. Format your response in markdown.`;
 
 router.post('/', async (req, res) => {
   try {
     const { message, history } = req.body;
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    const ai = new GoogleGenAI(apiKey ? { apiKey: apiKey } : {});
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });

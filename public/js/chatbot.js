@@ -46,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
     appendMessage('user', text);
     chatbotInput.value = '';
     
+    // Hide quick actions
+    const quickActions = document.getElementById('chatbot-quick-actions');
+    if (quickActions) quickActions.style.display = 'none';
+    
     // 2. Show typing indicator
     chatTyping.style.display = 'flex';
     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;

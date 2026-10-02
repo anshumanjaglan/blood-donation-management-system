@@ -2,19 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { GoogleGenAI } = require('@google/genai');
 
-// Check if API key is provided in environment variables
 const apiKey = process.env.GEMINI_API_KEY;
-
-// Create the Gemini AI client
-// We initialize it even if apiKey is undefined; we will handle the error in the route
 const ai = new GoogleGenAI(apiKey ? { apiKey: apiKey } : {});
 
-const SYSTEM_INSTRUCTION = `You are an AI healthcare assistant integrated into the Blood Donation Management System (RaktDaan).
-Your role is to provide health information based on user symptoms, predict potential diseases, suggest effective over-the-counter medicine for minor illnesses (always adding a disclaimer to consult a doctor), and provide dietary/lifestyle advice.
-You must cover: weight management, sugar management, cholesterol management, SGPT/SGOT (liver) management, kidney health, stress management, depression management, mental health, and overall healthcare.
-Be compassionate, concise, and helpful. Format your responses with bullet points and clear headings for readability. Use emojis where appropriate.
-If the user asks about blood donation, encourage them to use the RaktDaan system.
-Disclaimer: Always remind users that you are an AI and they should consult a medical professional for serious conditions.`;
+const SYSTEM_INSTRUCTION = `You are a helpful and polite health and lifestyle assistant. 
+Provide general information about wellness, diet, and minor symptoms. 
+Do not act as a doctor, do not diagnose conditions, and do not prescribe medications. 
+Always advise the user to consult a real doctor for medical concerns. 
+Keep your responses concise and well-formatted.`;
 
 router.post('/', async (req, res) => {
   try {
@@ -24,9 +19,8 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    if (!apiKey) {
-      // Provide a simulated fallback if no API key is provided
-      const isGreeting = message.toLowerCase().match(/hi|hello|hey|help/);
+    if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY_HERE') {
+      const isGreeting = message.toLowerCase().match(/^(hi|hello|hey|start)/i);
       if (isGreeting) {
          return res.json({ response: "Hello! I am your AI Health Assistant. 🩺\n\nI can help you with:\n• Symptom analysis & minor illness advice\n• Diet & Nutrition\n• Weight, Sugar, Cholesterol, SGPT/SGOT, and Kidney management\n• Mental health & Stress relief\n\n*Note: To unlock my full AI capabilities, the administrator needs to set the GEMINI_API_KEY in the server environment.*" });
       } else {
@@ -34,28 +28,39 @@ router.post('/', async (req, res) => {
       }
     }
 
-    // Format history for the Gemini API
     const contents = [];
+    
+    // Inject system instruction into the first message to avoid SDK 503 filters
+    let isFirstMessage = true;
+
     if (history && Array.isArray(history)) {
         for (const msg of history) {
+            let text = msg.text;
+            if (isFirstMessage && msg.role === 'user') {
+                text = `[System Instruction: ${SYSTEM_INSTRUCTION}]\n\nUser: ${text}`;
+                isFirstMessage = false;
+            }
             contents.push({
                 role: msg.role === 'user' ? 'user' : 'model',
-                parts: [{ text: msg.text }]
+                parts: [{ text: text }]
             });
         }
     }
     
-    // Add current message
+    let currentText = message;
+    if (isFirstMessage) {
+        currentText = `[System Instruction: ${SYSTEM_INSTRUCTION}]\n\nUser: ${message}`;
+    }
+
     contents.push({
         role: 'user',
-        parts: [{ text: message }]
+        parts: [{ text: currentText }]
     });
 
     const response = await ai.models.generateContent({
       model: 'gemini-3.8-flash',
       contents: contents,
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
         temperature: 0.7,
       }
     });

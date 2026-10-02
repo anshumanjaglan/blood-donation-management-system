@@ -31,17 +31,43 @@ router.post('/', async (req, res) => {
     const contents = [
       {
         role: 'user',
-        parts: [{ text: `[System Instruction: ${SYSTEM_INSTRUCTION}]\n\nUser: ${message}` }]
+        parts: [{ text: message }]
       }
     ];
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
-      contents: contents,
-      config: {
-        temperature: 0.7,
+    const modelsToTry = ['gemini-3.5-flash', 'gemini-3.7-flash', 'gemini-3.8-flash', 'gemini-2.5-pro'];
+    let response = null;
+    let lastError = null;
+
+    for (const modelName of modelsToTry) {
+      try {
+        console.log(`Trying model: ${modelName}...`);
+        const result = await ai.models.generateContent({
+          model: modelName,
+          contents: contents,
+          config: {
+            temperature: 0.7,
+          }
+        });
+        response = result;
+        console.log(`Success with model: ${modelName}`);
+        break; // Exit the loop if successful
+      } catch (err) {
+        console.error(`Model ${modelName} failed:`, err.message);
+        lastError = err;
+        // Continue to the next model if it's a 429 (Quota) or 503 (High Demand/Safety Block)
+        if (err.status === 429 || err.status === 503 || err.message.includes('429') || err.message.includes('503')) {
+           continue;
+        } else {
+           // For other errors (like 400 Bad Request), stop trying and throw
+           break;
+        }
       }
-    });
+    }
+
+    if (!response) {
+      throw lastError || new Error('All models exhausted their quota or failed.');
+    }
 
     return res.json({ response: response.text });
   } catch (error) {

@@ -5,11 +5,7 @@ const { GoogleGenAI } = require('@google/genai');
 const apiKey = process.env.GEMINI_API_KEY;
 const ai = new GoogleGenAI(apiKey ? { apiKey: apiKey } : {});
 
-const SYSTEM_INSTRUCTION = `You are a helpful and polite health and lifestyle assistant. 
-Provide general information about wellness, diet, and minor symptoms. 
-Do not act as a doctor, do not diagnose conditions, and do not prescribe medications. 
-Always advise the user to consult a real doctor for medical concerns. 
-Keep your responses concise and well-formatted.`;
+const SYSTEM_INSTRUCTION = `You are a helpful AI assistant. Answer the user's questions clearly. Format your response in markdown.`;
 
 router.post('/', async (req, res) => {
   try {

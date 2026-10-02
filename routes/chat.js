@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { GoogleGenAI } = require('@google/genai');
+const fs = require('fs');
+const path = require('path');
 
 const SYSTEM_INSTRUCTION = `You are a helpful AI assistant. Answer the user's questions clearly. Format your response in markdown.`;
 
@@ -8,7 +10,24 @@ router.post('/', async (req, res) => {
   try {
     const { message, history } = req.body;
 
-    const apiKey = process.env.GEMINI_API_KEY;
+    // 1. Try process.env
+    let apiKey = process.env.GEMINI_API_KEY;
+    
+    // 2. Aggressive Fallback: Read directly from .env file if Node environment is bugged
+    if (!apiKey) {
+      try {
+        const envPath = path.join(__dirname, '..', '.env');
+        const envContent = fs.readFileSync(envPath, 'utf8');
+        const match = envContent.match(/GEMINI_API_KEY=(.*)/);
+        if (match) {
+          apiKey = match[1].trim();
+          process.env.GEMINI_API_KEY = apiKey; // Cache it for next time
+        }
+      } catch (err) {
+        console.error('Failed to parse .env file manually:', err.message);
+      }
+    }
+
     const ai = new GoogleGenAI(apiKey ? { apiKey: apiKey } : {});
 
     if (!message) {

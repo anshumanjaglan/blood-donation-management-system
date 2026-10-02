@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blood Donation Management System | Save Lives</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chatbot.css">
 </head>
 <body>
 
@@ -465,5 +466,46 @@
       });
     });
   </script>
+
+  <!-- AI Health Assistant Chatbot Widget -->
+  <div class="chatbot-widget" id="chatbot-widget">
+    <!-- Chat Window -->
+    <div class="chatbot-window" id="chatbot-window">
+      <div class="chatbot-header">
+        <div class="chatbot-header-info">
+          <div class="chatbot-avatar">🤖</div>
+          <div>
+            <h3 class="chatbot-title">AI Health Assistant</h3>
+            <p class="chatbot-status">Powered by Gemini AI</p>
+          </div>
+        </div>
+        <button class="chatbot-close" id="chatbot-close">&times;</button>
+      </div>
+      <div class="chatbot-messages" id="chatbot-messages">
+        <!-- Messages will be injected here dynamically -->
+        <div class="chat-typing" id="chat-typing">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Ask about symptoms, diet, health..." autocomplete="off">
+        <button id="chatbot-send" class="chatbot-send">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+      <div class="chatbot-disclaimer">
+        ⚠️ AI predictions are for informational purposes only and do not replace professional medical advice.
+      </div>
+    </div>
+    
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Open Health Assistant">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
+    </button>
+  </div>
+
+  <script src="js/chatbot.js"></script>
 </body>
 </html>

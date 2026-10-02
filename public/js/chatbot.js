@@ -86,14 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Simple markdown to HTML parser
     let html = text
-      .replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>') // Bold
-      .replace(/\\*(.*?)\\*/g, '<em>$1</em>') // Italic
-      .replace(/\\n/g, '<br>'); // Newlines
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+      .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic
+      .replace(/\n/g, '<br>'); // Newlines
     
     // Basic list formatting
-    html = html.replace(/(?:^|<br>)• (.*?)(?=<br>|$)/g, '<li>$1</li>');
+    html = html.replace(/(?:^|<br>)(?:[*\-]|\u2022)\s(.*?)(?=<br>|$)/g, '<br><li>$1</li>');
     if (html.includes('<li>')) {
-      html = html.replace(/(<li>.*<\/li>)/g, '<ul style="margin: 8px 0; padding-left: 20px;">$1</ul>');
+      html = html.replace(/(?:<br><li>.*?<\/li>)+/g, match => `<ul style="margin: 8px 0; padding-left: 20px;">${match.replace(/<br>/g, '')}</ul>`);
     }
 
     msgDiv.innerHTML = html;
